@@ -1,20 +1,37 @@
 import requests
 
 def getJson(url):
-    response = requests.get(url)
-    val = response.json()
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raises HTTPError for bad responses
+        val = response.json()
+    except requests.exceptions.RequestException as e:
+        val = None  # Or handle the error as needed
+        print(f"An error occurred: {e}")
+    
+    
+    
     return val
 
 def buildSLQ():
     url = "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100"
-    return getJson(url)
+    try:
+        return getJson(url)
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return []
 
 def buildSLDetails():
     val = buildSLQ()
+    if not val:
+        return []
     
     details_list = []
-    for departure in val['departures']:
-        details_list.append([departure['destination'], departure['display']])
+    for i, departure in enumerate(val['departures']):
+        if i < 4:
+            details_list.append([departure['destination'], departure['display']])
+        else:
+            break
     return details_list
 
 
@@ -32,7 +49,12 @@ def main():
 
 def buildWebPage():
     out = buildSLDetails()
-
+    if not out:
+        print("Error: Could not build SL details page")
+        return
+    from datetime import datetime
+    now = datetime.now()
+    current_time = now.strftime("%H:%M")
     html = """
     <html>
     <head>
@@ -77,6 +99,9 @@ def buildWebPage():
             .list-group-item h3 {
                 font-size: 1.25rem;
             }
+            .list-group {
+                max-width: 40rem;
+            }
         </style>
     </head>
     <body>
@@ -86,21 +111,25 @@ def buildWebPage():
 </script>
 
         <div class="container">
-        
-        
-
             <div class="row">
                 <div class="col-md-12">
                     <h1 class="display-4 text-white">SL Details</h1>
                     <ul class="list-group">
     """
-    
+   
     for i, dep in enumerate(out):
-        html += "<li class='list-group-item'><h" + str(3-i) + "><span style='color: #ffa500;'>" + dep[0] + "</span> <span style='color: #a0aec0;'> | </span> <span style='color: #45aaf2;'>" + dep[1] + "</span></h" + str(3-i) + "></li>"
-    
+
+        color = "#45aaf2"  # default color
+        if dep[1][:2] == "Nu":
+            continue
+        
+        elif 3 <= int(dep[1][:2]) < 7:
+            color = "#34C759"
+        
+        html += f"<li class='list-group-item'><h{0+i}><span style='color: #ffa500;'>{dep[0]}</span> <span style='color: #a0aec0;'> | </span> <span style='color: {color};'>{dep[1]}</span></h{0+i}></li>"
     html += """
                     </ul>
-                </div>
+                </div>  
             </div>
         </div>
     </body>
@@ -111,6 +140,11 @@ def buildWebPage():
         }, 60000);
     </script>
     """
+    html += f"""
+    <p class='list-group-item' style='background-color: #45aaf2; color: #fff'>
+        Last updated: {current_time}
+    </p>
+    """ 
     
     return html
 
