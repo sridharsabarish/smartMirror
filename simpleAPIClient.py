@@ -1,18 +1,18 @@
 import requests
+from datetime import datetime
+from flask import Flask, render_template_string
+import assets
+
 
 def getJson(url):
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=5)
         response.raise_for_status()  # Raises HTTPError for bad responses
         val = response.json()
     except requests.exceptions.RequestException as e:
         val = None  # Or handle the error as needed
         print(f"An error occurred: {e}")
-    
-    
-    
     return val
-
 def buildSLQ():
     url = "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100"
     try:
@@ -34,25 +34,58 @@ def buildSLDetails():
             break
     return details_list
 
-
-
-# def buildWeather():
-#     city = "Stockholm"
-#     api_key = "ca6db37f82fc4cba9cf51956241909"
-#     url = "http://api.weatherapi.com/v1/current.json?key="+api_key+"&q="+city+"&aqi=yes"
-#     out = getJson(url)
-#     return out['current']['temp_c']
-
-def main():
-    out = buildSLDetails()
-    print(out)
+def buildErrorCase(out):
+    if not out:
+        print("Error: Could not build SL details page")
+        html = """
+        <html>
+        <head>
+            <title>SL decided to take a break</title>
+            <style>
+                body {
+                    background-color: #f2f2f2;
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 100vh;
+                }
+                h1 {
+                    color: #ff6347;
+                    font-size: 4rem;
+                    margin-bottom: 2rem;
+                }
+                p {
+                    font-size: 2rem;
+                    line-height: 1.5;
+                }
+            </style>
+            <meta http-equiv="refresh" content="30">
+        </head>
+        <body>
+            <div class="container">
+                <h1>SL is currently on a coffee break</h1>
+                <p>Don't worry, it's not you, it's them. Or maybe it's just the coffee. Either way, try again in a bit, maybe.</p>
+                <p>In the meantime, take a deep breath, and remember: there's always another way to get where you need to go. Preferably with a coffee in hand.</p>
+            </div>
+        </body>
+        </html>
+    <script>
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 6000);
+    </script>        
+        """
+        return html
+    
 
 def buildWebPage():
     out = buildSLDetails()
     if not out:
-        print("Error: Could not build SL details page")
-        return
-    from datetime import datetime
+        return buildErrorCase(out)
+
+    
     now = datetime.now()
     current_time = now.strftime("%H:%M")
     html = """
@@ -110,23 +143,19 @@ def buildWebPage():
 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
 </script>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1 class="display-4 text-white">SL Details</h1>
-                    <ul class="list-group">
+       
     """
    
     for i, dep in enumerate(out):
 
-        color = "#45aaf2"  # default color
+        color = assets.ColorsInHex.BLUE  # default color
         if dep[1][:2] == "Nu":
             continue
         
         elif 3 <= int(dep[1][:2]) < 7:
-            color = "#34C759"
+            color = assets.ColorsInHex.GREEN
         
-        html += f"<li class='list-group-item'><h{0+i}><span style='color: #ffa500;'>{dep[0]}</span> <span style='color: #a0aec0;'> | </span> <span style='color: {color};'>{dep[1]}</span></h{0+i}></li>"
+        html += f"<li class='list-group-item'><h{i+1}><span style='color: #ffa500;'>{dep[0]}</span> <span style='color: #a0aec0;'> | </span> <span style='color: {color};'>{dep[1]}</span></h{i+1}></li>"
     html += """
                     </ul>
                 </div>  
@@ -141,15 +170,14 @@ def buildWebPage():
     </script>
     """
     html += f"""
-    <p class='list-group-item' style='background-color: #45aaf2; color: #fff'>
+    <p class='list-group-item' style='background-color: #45aaf2; color: #fff; text-align: center; margin: 0 auto;'>
         Last updated: {current_time}
     </p>
     """ 
     
     return html
 
-from flask import Flask, render_template_string
-
+#Flask Related Stuff
 app = Flask(__name__)
 
 @app.route('/')
@@ -158,7 +186,5 @@ def servePage():
     return render_template_string(html)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000, debug=True)
-
-main()
+    app.run(host='0.0.0.0', port=2000, debug=True)
 
