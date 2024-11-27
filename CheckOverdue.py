@@ -14,7 +14,5 @@ def get_overdue():
 outjson=get_overdue()
 if outjson:
     outjson = json.loads(outjson)
-    size_of_inv=len(outjson['inventory'])
-    for i in range(0,size_of_inv):
-        print(outjson['inventory'][i]['name'])
-        
+    print(outjson['inventory'][0]['name'])
+

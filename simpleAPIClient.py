@@ -163,19 +163,52 @@ def buildWebPage():
         </div>
     </body>
     </html>
-    <script>
-        setTimeout(function(){
-            window.location.reload(1);
-        }, 60000);
-    </script>
     """
     html += f"""
-    <p class='list-group-item' style='background-color: #45aaf2; color: #fff; text-align: center; margin: 0 auto;'>
-        Last updated: {current_time}
-    </p>
-    """ 
+    <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center; background-color: #ffffe0; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);">
+        <ul style="list-style: none; padding: 0; margin: 0;">
+        {"".join([f"<li style='margin-bottom: 0.5rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {name[:]}</li>" for name in names[:]])}
+        </ul>
+        <p style="margin-bottom: 0; font-size: 1rem;">
+            <h2 style="margin: 0.5rem 0;">These items are overdue.</h2>
+        </p>
+    </div>
+    <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center;">
+        <p class='list-group-item' style='background-color: #45aaf2; color: #fff; margin: 0;'>
+            Last updated: {current_time}
+        </p>
+    </div>
+    """
+    
     
     return html
+
+
+
+import json
+import requests
+
+def get_overdue():
+    try:
+        response = requests.get("http://0.0.0.0:5000/inventory/overdue")
+        response.raise_for_status()
+        #print(response.text)
+        return response.text
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+        return None
+
+
+
+names=[]
+outjson=get_overdue()
+if outjson:
+    outjson = json.loads(outjson)
+    size_of_inv=len(outjson['inventory'])
+    for i in range(0,size_of_inv):
+        names.append(outjson['inventory'][i]['name'])
+        
+
 
 #Flask Related Stuff
 app = Flask(__name__)
@@ -187,4 +220,8 @@ def servePage():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2000, debug=True)
+
+
+
+
 
