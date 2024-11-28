@@ -4,6 +4,7 @@ from flask import Flask, render_template_string
 import assets
 
 
+
 def getJson(url):
     try:
         response = requests.get(url, timeout=5)
@@ -65,9 +66,8 @@ def buildErrorCase(out):
         </head>
         <body>
             <div class="container">
-                <h1>SL is currently on a coffee break</h1>
-                <p>Don't worry, it's not you, it's them. Or maybe it's just the coffee. Either way, try again in a bit, maybe.</p>
-                <p>In the meantime, take a deep breath, and remember: there's always another way to get where you need to go. Preferably with a coffee in hand.</p>
+                <h1>Fika Time!</h1>
+                <p>Get that Coffee!</p>
             </div>
         </body>
         </html>
@@ -84,10 +84,12 @@ def buildWebPage():
     out = buildSLDetails()
     if not out:
         return buildErrorCase(out)
-
     
     now = datetime.now()
     current_time = now.strftime("%H:%M")
+    date_today=datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    
+    
     html = """
     <html>
     <head>
@@ -175,12 +177,11 @@ def buildWebPage():
     </div>
     <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center;">
         <p class='list-group-item' style='background-color: #45aaf2; color: #fff; margin: 0;'>
-            Last updated: {current_time}
+            Last updated: {current_time}, {date_today}
         </p>
     </div>
     """
-    
-    
+
     return html
 
 
