@@ -168,12 +168,13 @@ def buildWebPage():
     """
     html += f"""
     <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center; background-color: #ffffe0; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);">
-        <ul style="list-style: none; padding: 0; margin: 0;">
-        {"".join([f"<li style='margin-bottom: 0.5rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {name[:]}</li>" for name in names[:]])}
-        </ul>
-        <p style="margin-bottom: 0; font-size: 1rem;">
-            <h2 style="margin: 0.5rem 0;">These items are overdue.</h2>
+            <p style="margin-bottom: 0; font-size: 1rem;">
+            <h2 style="margin: 0.5rem 0;">Overdue Items</h2>
         </p>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+        {"".join([f"<li style='margin-bottom: 0.5rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:3])])}
+        </ul>
+
     </div>
     <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center;">
         <p class='list-group-item' style='background-color: #45aaf2; color: #fff; margin: 0;'>
