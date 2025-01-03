@@ -22,7 +22,7 @@ def buildSLQ():
         print(f"An error occurred: {e}")
         return []
 
-def buildSLDetails():
+def getSLDetails():
     val = buildSLQ()
     if not val:
         return []
@@ -80,16 +80,7 @@ def buildErrorCase(out):
         return html
     
 
-def buildWebPage():
-    out = buildSLDetails()
-    if not out:
-        return buildErrorCase(out)
-    
-    now = datetime.now()
-    current_time = now.strftime("%H:%M")
-    date_today=datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-    
-    
+def base_layout():
     html = """
     <html>
     <head>
@@ -139,15 +130,39 @@ def buildWebPage():
             }
         </style>
     </head>
-    <body>
-           <a class="weatherwidget-io" href="https://forecast7.com/en/59d4417d94/sollentuna/" data-label_1="SOLLENTUNA" data-label_2="WEATHER" data-theme="original" >SOLLENTUNA WEATHER</a>
-<script>
-!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
-</script>
-
-       
+     """
+    return html
+def weather_ux(html):
+    html += """
+        <body>
+            <a class="weatherwidget-io" href="https://forecast7.com/en/59d4417d94/sollentuna/" data-label_1="SOLLENTUNA" data-label_2="WEATHER" data-theme="original" >SOLLENTUNA WEATHER</a>
+    <script>
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+    </script>
     """
+    return html
+
+
+
+
+def buildWebPage():
+    out = getSLDetails()
+    if not out:
+        return buildErrorCase(out)
+    
+    now = datetime.now()
+    current_time = now.strftime("%H:%M")
+    date_today=datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    
+    # Weather Segment
+    html = base_layout()
+    html += weather_ux(html)
+    html += sl_ux(out)
+    html += inventory_ux(names, current_time, date_today)
+    return html
    
+def sl_ux(out):
+    html = ""
     for i, dep in enumerate(out):
 
         color = assets.ColorsInHex.BLUE  # default color
@@ -166,7 +181,11 @@ def buildWebPage():
     </body>
     </html>
     """
-    html += f"""
+    return html
+    
+    
+def inventory_ux(names, current_time, date_today):
+    html = f"""
     <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center; background-color: #ffffe0; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);">
             <p style="margin-bottom: 0; font-size: 1rem;">
             <h2 style="margin: 0.5rem 0;">Overdue Items</h2>
@@ -182,8 +201,9 @@ def buildWebPage():
         </p>
     </div>
     """
-
     return html
+
+    
 
 
 
@@ -202,6 +222,7 @@ def get_overdue():
 
 
 
+# General Code
 names=[]
 outjson=get_overdue()
 if outjson:
