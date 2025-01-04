@@ -130,11 +130,11 @@ def base_layout():
             }
         </style>
     </head>
+    <body>
      """
     return html
 def weather_ux(html):
     html += """
-        <body>
             <a class="weatherwidget-io" href="https://forecast7.com/en/59d4417d94/sollentuna/" data-label_1="SOLLENTUNA" data-label_2="WEATHER" data-theme="original" >SOLLENTUNA WEATHER</a>
     <script>
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
@@ -142,28 +142,13 @@ def weather_ux(html):
     """
     return html
 
-
-
-
-def buildWebPage():
-    out = getSLDetails()
-    if not out:
-        return buildErrorCase(out)
-    
-    now = datetime.now()
-    current_time = now.strftime("%H:%M")
-    date_today=datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-    
-    # Weather Segment
-    html = base_layout()
-    html += weather_ux(html)
-    html += sl_ux(out)
-    html += inventory_ux(names, current_time, date_today)
-    return html
+def sl_ux(html,out):
    
-def sl_ux(out):
-    html = ""
-    for i, dep in enumerate(out):
+    html += """
+        <div style="display: inline-block; vertical-align: top; width: 70%; text-align: center;">
+            <div class="list-group">
+    """
+    for i, dep in enumerate(out[:3]):
 
         color = assets.ColorsInHex.BLUE  # default color
         if dep[1][:2] == "Nu":
@@ -174,28 +159,26 @@ def sl_ux(out):
         
         html += f"<li class='list-group-item'><h{i+1}><span style='color: #ffa500;'>{dep[0]}</span> <span style='color: #a0aec0;'> | </span> <span style='color: {color};'>{dep[1]}</span></h{i+1}></li>"
     html += """
-                    </ul>
-                </div>  
             </div>
         </div>
-    </body>
-    </html>
     """
     return html
     
     
-def inventory_ux(names, current_time, date_today):
-    html = f"""
-    <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center; background-color: #ffffe0; padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);">
+def inventory_ux(html,names, current_time, date_today):
+    html += f"""
+    <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); text-align: center; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);">
             <p style="margin-bottom: 0; font-size: 1rem;">
-            <h2 style="margin: 0.5rem 0;">Overdue Items</h2>
+            <h2 style="margin: 0.5rem 0; color: #ff0000;"><span style="color: #ff0000; font-size: 1.5rem; margin-right: 0.5rem; display: inline-block;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="9.01"></line><line x1="12" y1="15" x2="12.01" y2="15"></line></svg></span><i class="fas fa-triangle-exclamation" style="color: #ff0000;"></i> Overdue Items</h2>
         </p>
-        <ul style="list-style: none; padding: 0; margin: 0;">
-        {"".join([f"<li style='margin-bottom: 0.5rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:3])])}
+        <ul style="list-style: none; padding: 0; margin: 0 10px;">
+        {"".join([f"<li style='margin-bottom: 0.5rem; font-size: 1.2rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:3])])}
         </ul>
 
     </div>
-    <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center;">
+    
+    
+    <div style="width: 100%; text-align: center;">
         <p class='list-group-item' style='background-color: #45aaf2; color: #fff; margin: 0;'>
             Last updated: {current_time}, {date_today}
         </p>
@@ -203,8 +186,38 @@ def inventory_ux(names, current_time, date_today):
     """
     return html
 
-    
 
+def close_html(html):
+    html+=f"""
+    </body>
+    </html>
+    """
+    return html
+
+
+
+
+def buildWebPage():
+    
+    out = getSLDetails()
+    if not out:
+        return buildErrorCase(out)
+    
+    now = datetime.now()
+    current_time = now.strftime("%H:%M")
+    date_today=datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    
+    # Weather Segment
+    html = base_layout()
+    html = weather_ux(html)
+    html = sl_ux(html,out)
+    html = inventory_ux(html,names, current_time, date_today)
+    html = close_html(html)
+    print("-----------")
+    print(html)
+    print("-----------")
+    return html
+   
 
 
 import json
