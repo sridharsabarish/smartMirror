@@ -165,7 +165,7 @@ def sl_ux(html,out):
     return html
     
     
-def inventory_ux(html,names, current_time, date_today):
+def inventory_ux(html,names):
     html += f"""
     <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); text-align: center; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);">
             <p style="margin-bottom: 0; font-size: 1rem;">
@@ -176,8 +176,10 @@ def inventory_ux(html,names, current_time, date_today):
         </ul>
 
     </div>
-    
-    
+      """
+    return html
+def updated_ux(html,current_time, date_today):
+    html += f"""
     <div style="width: 100%; text-align: center;">
         <p class='list-group-item' style='background-color: #45aaf2; color: #fff; margin: 0;'>
             Last updated: {current_time}, {date_today}
@@ -205,13 +207,14 @@ def buildWebPage():
     
     now = datetime.now()
     current_time = now.strftime("%H:%M")
-    date_today=datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    date_today=datetime.today().strftime('%d-%m-%y')
     
     # Weather Segment
     html = base_layout()
     html = weather_ux(html)
     html = sl_ux(html,out)
-    html = inventory_ux(html,names, current_time, date_today)
+    html = inventory_ux(html,names)
+    html = updated_ux(html,current_time, date_today)
     html = close_html(html)
     print("-----------")
     print(html)
