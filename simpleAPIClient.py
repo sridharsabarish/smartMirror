@@ -2,6 +2,8 @@ import requests
 from datetime import datetime
 from flask import Flask, render_template_string
 import assets
+import os
+from dotenv import load_dotenv, find_dotenv
 
 
 
@@ -34,6 +36,20 @@ def getSLDetails():
         else:
             break
     return details_list
+
+
+def getWeatherDetails(city):
+    load_dotenv()
+    api_key = os.getenv("API_KEY")
+
+    if not api_key:
+        print("Error: API_KEY not found in .env file.")
+
+    else:
+        url="http://api.weatherapi.com/v1/current.json?key="+api_key+"&q="+city+"&aqi=yes"      
+        val = getJson(url);
+        print(val)
+     
 
 def buildErrorCase(out):
     if not out:
@@ -200,6 +216,9 @@ def close_html(html):
 
 
 def buildWebPage():
+    #Todo: Need to add weather to the info bar.
+    out1 = getWeatherDetails("stockholm");
+    
     
     out = getSLDetails()
     if not out:
@@ -214,7 +233,7 @@ def buildWebPage():
     html = weather_ux(html)
     html = sl_ux(html,out)
     html = inventory_ux(html,names)
-    html = updated_ux(html,current_time, date_today)
+    html = updated_ux(html,current_time, date_today, out1)
     html = close_html(html)
     print("-----------")
     print(html)
