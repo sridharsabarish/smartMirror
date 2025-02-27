@@ -1,5 +1,5 @@
 # Smart Mirror
-- A prototype for smart mirror, currently tested on RPI4 and Touch display.
+- A prototype for smart mirror, currently tested on Raspberry Pi 4 and Touch display.
 
 
 # Quick Start
