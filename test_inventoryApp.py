@@ -19,6 +19,6 @@ def getJson(url):
         print(f"An error occurred: {e}")
     return val
 
-def test_url():
+def test_inventory_app_running():
     out = getJson("http://0.0.0.0:5000/inventory/overdue")
     assert out!=None

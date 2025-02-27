@@ -25,9 +25,11 @@ def buildSLQ():
         return []
 
 def getSLDetails():
+    #TODO: Perhaps raise an exception and handle it?
     val = buildSLQ()
     if not val:
         return []
+    
     
     details_list = []
     for i, departure in enumerate(val['departures']):
@@ -233,7 +235,7 @@ def buildWebPage():
     html = weather_ux(html)
     html = sl_ux(html,out)
     html = inventory_ux(html,names)
-    html = updated_ux(html,current_time, date_today, out1)
+    html = updated_ux(html,current_time, date_today)
     html = close_html(html)
     print("-----------")
     print(html)
