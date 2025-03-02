@@ -1,13 +1,22 @@
 # Smart Mirror
 - A prototype for smart mirror, currently tested on Raspberry Pi 4 and Touch display.
 
+![alt text](Assets/app.png)
+
+
 
 # Quick Start
 
-- Clone the repo 
-    - `git clone https://github.com/sridharsabarish/SLMagic.git`
+- Clone this repo using 
+    - `git clone https://github.com/sridharsabarish/smartMirror.git`
+- Clone the Inventory Manager
+    - `git clone https://github.com/sridharsabarish/easyInventory.git`
 - Start the inventory app
-    - `python3 -m simpleAPIClient.py`
+    - `python3 -m app.py`
+- Start the Smart mirror app
+    - `python3 simpleAPIClient.py`
+- Open the link
+    - `http://0.0.0.0:2000/`
 
 
 # Testing
