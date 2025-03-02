@@ -15,6 +15,7 @@ def getJson(url):
     try:
         response = requests.get(url, timeout=5)
         response.raise_for_status()  # Raises HTTPError for bad responses
+        
         val = response.json()
     except requests.exceptions.RequestException as e:
         val = None  # Or handle the error as needed
@@ -32,4 +33,6 @@ def test_inventory_app_is_running():
     
 def test_flask_app_is_running():
     out = getJson("http://0.0.0.0:2000/")
+    assert out!=None
     
+
