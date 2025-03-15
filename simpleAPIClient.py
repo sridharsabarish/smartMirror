@@ -34,7 +34,8 @@ def getSLDetails():
     details_list = []
     for i, departure in enumerate(val['departures']):
         if i < 4:
-            details_list.append([departure['destination'], departure['display']])
+            truncated_destination = departure['destination'].split()[0]
+            details_list.append([truncated_destination, departure['display']])
         else:
             break
     return details_list
