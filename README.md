@@ -1,5 +1,15 @@
 # Smart Mirror
-- A prototype for smart mirror, currently tested on Raspberry Pi 4 and Touch display.
+
+**Fighting laziness one line at a time**, this project aims to build an arsenal of functionalities for a smart mirror in order to effectively design modern life.
+
+The tool is aimed  at providing the following features
+* **Public transportation** information (for stockholm as of now)
+* **Weather Updates**
+* **Inventory Alerts!**
+
+
+- The prototype for smart mirror is currently tested on Raspberry Pi 4 and Touch display.
+
 
 ![alt text](Assets/app.png)
 
@@ -37,6 +47,8 @@
 
 <details>
 <summary> Expand for more </summary>
+# Expansion
+1. Test on 24 inch screen acting as a mirror.
 
 # Home Automation
 1. ESP32 based humiditity/Temperature/Pressure monitoring.
