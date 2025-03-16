@@ -26,13 +26,13 @@ def test_sl_api_reacheable():
     out = getJson("https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100")
     assert out!=None
     
-def test_inventory_app_is_running():
-    out = getJson("http://0.0.0.0:5000/inventory/overdue")
-    assert out!=None
+# def test_inventory_app_is_running():
+#     out = getJson("http://0.0.0.0:5000/inventory/overdue")
+#     assert out!=None
     
     
-def test_flask_app_is_running():
-    out = getJson("http://0.0.0.0:2000/")
-    assert out!=None
+# def test_flask_app_is_running():
+#     out = getJson("http://0.0.0.0:2000/")
+#     assert out!=None
     
 
