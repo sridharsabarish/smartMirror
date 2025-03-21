@@ -37,7 +37,7 @@ def getSLDetails():
     
     details_list = []
     for i, departure in enumerate(val['departures']):
-        if i < 4:
+        if i < 10:
             truncated_destination = departure['destination'].split()[0]
             details_list.append([truncated_destination, departure['display']])
         else:
@@ -169,25 +169,68 @@ class buildHtml:
         return html
 
     def sl_ux(self,html,out):
-    
+        
         html += """
             <div style="display: inline-block; vertical-align: top; width: 70%; text-align: center;">
                 <div class="list-group">
         """
-        for i, dep in enumerate(out[:3]):
-
-            color = assets.ColorsInHex.BLUE  # default color
-            if dep[1][:2] == "Nu":
+        print("i'm here")
+        print(out)
+        
+        
+        ## Todo : Good to refine a bit later
+        out_dict = {}
+        for dep in out:
+            if dep[0] not in out_dict:
+                out_dict[dep[0]] = [dep[1]]
+            else:
+                out_dict[dep[0]].append(dep[1])
+        
+        print(out_dict)
+        
+        
+        
+        html += """
+            <div style="display: inline-block; vertical-align: top; width: 70%; text-align: center;">
+                <div class="list-group">
+        """
+        for key, deps in out_dict.items():
+            if not key:
                 continue
-            
-            elif 3 <= int(dep[1][:2]) < 7:
-                color = assets.ColorsInHex.GREEN
-            
-            html += f"<li class='list-group-item'><h{i+1}><span style='color: #ffa500;'>{dep[0]}</span> <span style='color: #a0aec0;'> | </span> <span style='color: {color};'>{dep[1]}</span></h{i+1}></li>"
+            html += f"""
+            <li class='list-group-item'>
+                <h1 style='display: inline-block; font-size: 2rem; color: #ffa500;'>{key}</h1>
+                <div style='font-size: 1.5rem'>
+            """
+            for i, dep in enumerate(deps):
+                if dep[:2] == "Nu":
+                    continue
+                color = assets.ColorsInHex.GREEN if 3 <= int(dep[:2]) < 7 else assets.ColorsInHex.BLUE
+                html += f"<span style='color: {color};'>{dep}</span> "
+            html += """
+                </div>
+            </li>
+            """
         html += """
                 </div>
             </div>
         """
+        
+        
+        # for i, dep in enumerate(out[:3]):
+
+        #     color = assets.ColorsInHex.BLUE  # default color
+        #     if dep[1][:2] == "Nu":
+        #         continue
+            
+        #     elif 3 <= int(dep[1][:2]) < 7:
+        #         color = assets.ColorsInHex.GREEN
+        
+        #     html += f"<li class='list-group-item'><h{i+1}><span style='color: #ffa500;'>{dep[0]}</span> <span style='color: #a0aec0;'> | </span> <span style='color: {color};'>{dep[1]}</span></h{i+1}></li>"
+        # html += """
+        #         </div>
+        #     </div>
+        # """
         return html
         
         
@@ -244,9 +287,9 @@ def buildWebPage():
     html = webpage.inventory_ux(html,names)
     html = webpage.updated_ux(html,current_time, date_today)
     html = webpage.close_html(html)
-    print("-----------")
-    print(html)
-    print("-----------")
+    # print("-----------")
+    # print(html)
+    # print("-----------")
     return html
    
 
