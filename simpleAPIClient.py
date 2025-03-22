@@ -191,22 +191,30 @@ class buildHtml:
         
         
         html += """
-            <div style="display: inline-block; vertical-align: top; width: 70%; text-align: center;">
+            <div style="display: block; vertical-align: top; width: 100%; text-align: center;">
                 <div class="list-group">
         """
         for key, deps in out_dict.items():
             if not key:
                 continue
-            html += f"""
-            <li class='list-group-item'>
-                <h1 style='display: inline-block; font-size: 2rem; color: #ffa500;'>{key}</h1>
-                <div style='font-size: 1.5rem'>
-            """
+
             for i, dep in enumerate(deps):
+                
+                
+                
                 if dep[:2] == "Nu":
                     continue
                 color = assets.ColorsInHex.GREEN if 3 <= int(dep[:2]) < 7 else assets.ColorsInHex.BLUE
-                html += f"<span style='color: {color};'>{dep}</span> "
+                
+                
+                if i ==0:
+                    html += f"""
+                    <li class='list-group-item'>
+                        <h1 style='display: inline-block; font-size: 2rem; color: #ffa500;'>{key} <span style='color: {color};'>{dep}</span> </h1>
+                        <div style='font-size: 1.5rem'>
+                    """
+                else:
+                    html += f"<span style='color: {color};'>{dep}</span> "
             html += """
                 </div>
             </li>
@@ -215,35 +223,21 @@ class buildHtml:
                 </div>
             </div>
         """
-        
-        
-        # for i, dep in enumerate(out[:3]):
-
-        #     color = assets.ColorsInHex.BLUE  # default color
-        #     if dep[1][:2] == "Nu":
-        #         continue
-            
-        #     elif 3 <= int(dep[1][:2]) < 7:
-        #         color = assets.ColorsInHex.GREEN
-        
-        #     html += f"<li class='list-group-item'><h{i+1}><span style='color: #ffa500;'>{dep[0]}</span> <span style='color: #a0aec0;'> | </span> <span style='color: {color};'>{dep[1]}</span></h{i+1}></li>"
-        # html += """
-        #         </div>
-        #     </div>
-        # """
+    
         return html
         
         
     def inventory_ux(self,html,names):
         html += f"""
         <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); text-align: center; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);">
+            <div style="width: 100%;">
                 <p style="margin-bottom: 0; font-size: 1rem;">
                 <h2 style="margin: 0.5rem 0; color: #ff0000;"><span style="color: #ff0000; font-size: 1.5rem; margin-right: 0.5rem; display: inline-block;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="9.01"></line><line x1="12" y1="15" x2="12.01" y2="15"></line></svg></span><i class="fas fa-triangle-exclamation" style="color: #ff0000;"></i> Overdue Items</h2>
-            </p>
-            <ul style="list-style: none; padding: 0; margin: 0 10px;">
-            {"".join([f"<li style='margin-bottom: 0.5rem; font-size: 1.2rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:3])])}
-            </ul>
-
+                </p>
+                <ul style="list-style: none; padding: 0; margin: 0 10px;">
+                {"".join([f"<li style='margin-bottom: 0.5rem; font-size: 1.2rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:3])])}
+                </ul>
+            </div>
         </div>
         """
         return html
@@ -284,7 +278,7 @@ def buildWebPage():
     html = webpage.base_layout()
     html = webpage.weather_ux(html)
     html = webpage.sl_ux(html,out)
-    html = webpage.inventory_ux(html,names)
+    #html = webpage.inventory_ux(html,names)
     html = webpage.updated_ux(html,current_time, date_today)
     html = webpage.close_html(html)
     # print("-----------")
