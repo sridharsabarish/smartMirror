@@ -7,7 +7,7 @@ from dotenv import load_dotenv, find_dotenv
 from APIRequest import APIRequest
 class HandleClothing:
 # Todo : Think how to refactor this one.
-    def getWeatherDetails(city):
+    def getWeatherDetails(self,city):
         apiRequest = APIRequest();
         load_dotenv()
         api_key = os.getenv("API_KEY")
@@ -19,9 +19,28 @@ class HandleClothing:
             url="http://api.weatherapi.com/v1/current.json?key="+api_key+"&q="+city+"&aqi=yes"      
             val = apiRequest.getJson(url);
             from pprint import pprint
-            pprint(val)
+            temperature = val['current']['temp_c']
+            self.buildLogicForClothing(temperature)
+            
             
         
-    def buildLogicForClothing():
+    def buildLogicForClothing(self,temperature):
         # Use the attributes from the weatherDetails and design clothing layers.
-        print("Hello world")
+        layers = 1
+        if temperature < 10:
+            layers =4
+        elif 10 <= temperature < 15:
+            layers = 3
+        elif 15 <= temperature < 20:
+            layers = 2
+        elif 20 <= temperature < 30:
+            layers = 1
+        else:
+            layers = 0
+
+        print(f"Wear {layers} layers of clothing.")
+        
+        
+
+clothing = HandleClothing()
+clothing.getWeatherDetails("stockholm")
