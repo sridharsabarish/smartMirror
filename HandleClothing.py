@@ -20,7 +20,7 @@ class HandleClothing:
             val = apiRequest.getJson(url);
             from pprint import pprint
             temperature = val['current']['temp_c']
-            self.buildLogicForClothing(temperature)
+            layers=self.buildLogicForClothing(temperature)
             
             
         
@@ -38,9 +38,9 @@ class HandleClothing:
         else:
             layers = 0
 
-        print(f"Wear {layers} layers of clothing.")
+        return layers
         
         
 
-clothing = HandleClothing()
-clothing.getWeatherDetails("stockholm")
+# clothing = HandleClothing()
+# clothing.getWeatherDetails("stockholm")

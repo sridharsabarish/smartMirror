@@ -34,7 +34,8 @@ def getSLDetails():
 def buildWebPage():
     webpage = buildHtml();
     #Todo: Need to add weather to the info bar.
-    out1 = HandleClothing.getWeatherDetails("stockholm");
+    clothing = HandleClothing()
+    out1 = clothing.getWeatherDetails("stockholm");
     
     
     out = getSLDetails()
@@ -49,6 +50,8 @@ def buildWebPage():
     html = webpage.base_layout()
     html = webpage.weather_ux(html)
     html = webpage.sl_ux(html,out)
+    html = webpage.add_node_red_dashboard(html)
+
     #html = webpage.inventory_ux(html,names)
     html = webpage.updated_ux(html,current_time, date_today)
     html = webpage.close_html(html)

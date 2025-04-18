@@ -153,7 +153,7 @@ class buildHtml:
                         <div style='font-size: 1.5rem'>
                     """
                 else:
-                    html += f"<span style='color: {color};'>{dep}</span> "
+                    html += f"<span style='color: #808080;'>{dep}</span> "
             html += """
                 </div>
             </li>
@@ -164,7 +164,7 @@ class buildHtml:
         """
     
         return html
-        
+
         
     def inventory_ux(self,html,names):
         html += f"""
@@ -197,3 +197,12 @@ class buildHtml:
         </html>
         """
         return html
+
+    def add_node_red_dashboard(self, html):
+        html += f"""
+        <div style="width: 50%; height: 800px; text-align: center; margin-top: 10px; float: right;">
+            <iframe src="http://192.168.0.105:1880/ui/" style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+        """
+        return html
+
