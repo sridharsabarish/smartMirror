@@ -10,11 +10,11 @@ from HandleClothing import HandleClothing
 
 
 #TODO : General reorganization/cleanup of the code below
-def getSLDetails():
+def get_sl_details():
     
     apiRequest = APIRequest();
     #TODO: Perhaps raise an exception and handle it?
-    val = apiRequest.buildSLQ()
+    val = apiRequest.fetch_sl_info()
     if not val:
         return []
     
@@ -31,16 +31,16 @@ def getSLDetails():
 
 
 
-def buildWebPage():
+def build_web_page():
     webpage = buildHtml();
     #Todo: Need to add weather to the info bar.
     clothing = HandleClothing()
-    out1 = clothing.getWeatherDetails("stockholm");
+    out1 = clothing.get_weather_details("stockholm");
     
     
-    out = getSLDetails()
+    out = get_sl_details()
     if not out:
-        return webpage.buildErrorCase(out)
+        return webpage.render_error_page(out)
     
     now = datetime.now()
     current_time = now.strftime("%H:%M")
@@ -95,8 +95,8 @@ if outjson:
 app = Flask(__name__)
 
 @app.route('/')
-def servePage():
-    html = buildWebPage()
+def serve_page():
+    html = build_web_page()
     return render_template_string(html)
 
 if __name__ == '__main__':

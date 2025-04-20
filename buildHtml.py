@@ -1,6 +1,6 @@
 import assets
 class buildHtml:
-    def buildErrorCase(self,out):
+    def render_error_page(self,out):
         if not out:
             print("Error: Could not build SL details page")
             html = """

@@ -7,7 +7,7 @@ from buildHtml import buildHtml
 
 
 class APIRequest:
-    def getJson(self, url):
+    def get_json(self, url):
         try:
             response = requests.get(url, timeout=5)
             response.raise_for_status()  # Raises HTTPError for bad responses
@@ -17,9 +17,9 @@ class APIRequest:
             print(f"An error occurred: {e}")
         return val
 
-    def buildSLQ(self):
+    def fetch_sl_info(self):
         url = "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100"
         try:
-            return self.getJson(url)
+            return self.get_json(url)
         except requests.exceptions.RequestException as e:
             print(f"An error occurred: {e}")
