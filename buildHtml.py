@@ -107,6 +107,13 @@ class buildHtml:
         """
         return html
 
+
+    def create_div(self,html):
+        html += """
+            <div>
+        """
+        return html
+
     def sl_ux(self,html,out):
         
         html += """
@@ -168,13 +175,13 @@ class buildHtml:
         
     def inventory_ux(self,html,names):
         html += f"""
-        <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); text-align: center; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);">
+        <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); float: right; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); text-align: right;">
             <div style="width: 100%;">
                 <p style="margin-bottom: 0; font-size: 1rem;">
                 <h2 style="margin: 0.5rem 0; color: #ff0000;"><span style="color: #ff0000; font-size: 1.5rem; margin-right: 0.5rem; display: inline-block;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="9.01"></line><line x1="12" y1="15" x2="12.01" y2="15"></line></svg></span><i class="fas fa-triangle-exclamation" style="color: #ff0000;"></i> Overdue Items</h2>
                 </p>
                 <ul style="list-style: none; padding: 0; margin: 0 10px;">
-                {"".join([f"<li style='margin-bottom: 0.5rem; font-size: 1.2rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:3])])}
+                {"".join([f"<li style='margin-bottom: 0.5rem; font-size: 1.2rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:10])])}
                 </ul>
             </div>
         </div>
@@ -191,6 +198,12 @@ class buildHtml:
         return html
 
 
+
+    def close_div(self,html):
+        html+=f"""
+        </div>
+        """
+        return html
     def close_html(self,html):
         html+=f"""
         </body>
@@ -200,8 +213,13 @@ class buildHtml:
 
     def add_node_red_dashboard(self, html):
         html += f"""
-        <div style="width: 50%; height: 800px; text-align: center; margin-top: 10px; float: right;">
-            <iframe src="http://192.168.0.105:1880/ui/" style="width: 100%; height: 100%; border: none;"></iframe>
+        <div style="width: 80%; height: 400px; text-align: left; margin-top: 10px; display: flex; justify-content: flex-start;">
+            <div style="width: 58%; height: 80%;">
+                <!-- Left component goes here -->
+            </div>
+            <div style="width: 58%; height: 100%;">
+                <iframe src="http://192.168.0.105:1880/ui/" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
         </div>
         """
         return html

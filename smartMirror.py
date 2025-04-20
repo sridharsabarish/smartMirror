@@ -49,10 +49,15 @@ def buildWebPage():
     # Weather Segment
     html = webpage.base_layout()
     html = webpage.weather_ux(html)
+    html = webpage.create_div(html)
+    html = webpage.create_div(html)
     html = webpage.sl_ux(html,out)
     html = webpage.add_node_red_dashboard(html)
+    html = webpage.close_div(html)
+    html = webpage.inventory_ux(html,names)
+    html = webpage.close_div(html)
+    
 
-    #html = webpage.inventory_ux(html,names)
     html = webpage.updated_ux(html,current_time, date_today)
     html = webpage.close_html(html)
     # print("-----------")
