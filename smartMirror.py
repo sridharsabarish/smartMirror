@@ -23,7 +23,11 @@ def get_sl_details():
     for i, departure in enumerate(val['departures']):
         if i < 10:
             truncated_destination = departure['destination'].split()[0]
-            details_list.append([truncated_destination, departure['display']])
+            print(truncated_destination)
+            if(truncated_destination == ""):
+                continue
+            else:
+                details_list.append([truncated_destination, departure['display']])
         else:
             break
     return details_list
@@ -52,9 +56,10 @@ def build_web_page():
     html = webpage.create_div(html)
     html = webpage.create_div(html)
     html = webpage.sl_ux(html,out)
-    html = webpage.add_node_red_dashboard(html)
+
+    #html = webpage.add_node_red_dashboard(html)
     html = webpage.close_div(html)
-    html = webpage.inventory_ux(html,names)
+    #html = webpage.inventory_ux(html,names)
     html = webpage.close_div(html)
     
 

@@ -1,6 +1,6 @@
 import assets
 class buildHtml:
-    def render_error_page(self,out):
+    def buildErrorCase(self,out):
         if not out:
             print("Error: Could not build SL details page")
             html = """
@@ -117,7 +117,7 @@ class buildHtml:
     def sl_ux(self,html,out):
         
         html += """
-            <div style="display: inline-block; vertical-align: top; width: 70%; text-align: center;">
+            <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center;">
                 <div class="list-group">
         """
         print("i'm here")
@@ -164,7 +164,16 @@ class buildHtml:
             html += """
                 </div>
             </li>
+            
+                <script>
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 25000);
+    </script>
+            
+            
             """
+            
         html += """
                 </div>
             </div>
