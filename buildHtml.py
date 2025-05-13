@@ -65,6 +65,7 @@ class buildHtml:
                 }
                 .container {
                     margin-top: 3rem;
+                    width: 100%;
                 }
                 .list-group-item {
                     margin-top: 0.5rem;
@@ -72,6 +73,7 @@ class buildHtml:
                     background-color: #2d3748;
                     border: none;
                     padding: 1rem;
+                    width: 100%;
                 }
                 .list-group-item:first-child {
                     margin-top: 0;
@@ -82,7 +84,7 @@ class buildHtml:
                     color: #fff;
                 }
                 .list-group-item h1 {
-                    font-size: 2.5rem;
+                    font-size: 7.5rem;
                 }
                 .list-group-item h2 {
                     font-size: 1.75rem;
@@ -91,7 +93,7 @@ class buildHtml:
                     font-size: 1.25rem;
                 }
                 .list-group {
-                    max-width: 40rem;
+                    max-width: 100%;
                 }
             </style>
         </head>
@@ -117,8 +119,8 @@ class buildHtml:
     def sl_ux(self,html,out):
         
         html += """
-            <div style="display: inline-block; vertical-align: top; width: 100%; text-align: center;">
-                <div class="list-group">
+            <div style="display: block; vertical-align: top; width: 100%; height: 100vh; text-align: center;">
+                <div class="list-group" style="height: 100%;">
         """
         print("i'm here")
         print(out)
@@ -138,7 +140,7 @@ class buildHtml:
         
         html += """
             <div style="display: block; vertical-align: top; width: 100%; text-align: center;">
-                <div class="list-group">
+                <div class="list-group" style="height: 100%;">
         """
         for key, deps in out_dict.items():
             if not key:
@@ -155,9 +157,9 @@ class buildHtml:
                 
                 if i ==0:
                     html += f"""
-                    <li class='list-group-item'>
-                        <h1 style='display: inline-block; font-size: 2rem; color: #ffa500;'>{key} <span style='color: {color};'>{dep}</span> </h1>
-                        <div style='font-size: 1.5rem'>
+                    <li class='list-group-item' style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <h1 style='display: inline-block; font-size: 4rem; color: #ffa500;'>{key} <span style='color: {color};'>{dep}</span> </h1>
+                        <div style='font-size: 2rem'>
                     """
                 else:
                     html += f"<span style='color: #808080;'>{dep}</span> "

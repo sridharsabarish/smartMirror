@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
-
-// TODO : Potential to refactor the fetcher code
+//Todo :Potential to refactor the fetcher code
 
 function DateTime() {
 
@@ -22,9 +21,35 @@ function DateTime() {
 
 
 
+function EmbeddedDashboard() {
+  const url = "http://192.168.0.107:1880/ui/#!/0?socketid=5xXtEo921g4GPqxDAAAB";
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const iframe = document.querySelector('iframe');
+    iframe.addEventListener('error', (event) => {
+      setError('Error loading dashboard');
+    });
+  }, []);
+
+  return (
+    <div style={{border: '1px solid black', borderRadius: '5px', padding: '10px', margin: '10px', backgroundColor: '#f0f0f0'}}>
+      <h2 style={{color: '#00698f'}}>Embedded Dashboard</h2>
+      {error ? (
+        <div style={{color: 'red'}}>{error}</div>
+      ) : (
+        <iframe 
+          src={url} 
+          title="Embedded Dashboard" 
+          style={{width: '100%', height: '500px', border: 'none'}}
+        ></iframe>
+      )}
+    </div>
+  );
+}
 function Overdue(){
   //const url ="https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100"
-  const url = "http://192.168.0.102:5000/inventory/overdue"
+  const url = "http://192.168.0.101:5000/inventory/overdue"
   const [data, setData] = useState(null);
     useEffect(() => {
       fetch(url)
@@ -67,7 +92,7 @@ function SLAPI(){
   }, {});
 
   return (
-    <div style={{border: '1px solid black', borderRadius: '5px', padding: '10px', margin: '10px', backgroundColor: '#f0f0f0'}}>
+    <div style={{border: '1px solid black', borderRadius: '5px', padding: '10px', margin: '10px', backgroundColor: '#f7d202'}}>
       {groupedDepartures && Object.entries(groupedDepartures).map(([direction, displays]) => (
         <div key={direction} style={{marginBottom: '10px'}}>
           <p style={{margin: 0, fontWeight: 'bold'}}>{direction}</p>
@@ -85,57 +110,13 @@ function SLAPI(){
 
 
 
-function WeatherClothingSuggestion() {
-  const [weather, setWeather] = useState(null);
-  const [suggestion, setSuggestion] = useState('');
-
-  useEffect(() => {
-    const url = 'http://api.weatherapi.com/v1/current.json?key=ca6db37f82fc4cba9cf51956241909&q=Stockholm';
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        setWeather(data.current);
-        const temp = data.current.temp_c;
-        if (temp < 5) {
-          setSuggestion('3 layers');
-        } else if (temp < 10) {
-          setSuggestion('Heavy Jacket!');
-        } else if (temp < 20) {
-          setSuggestion('Autumn Jacket');
-        } else {
-          setSuggestion('A t-shirt should be fine.');
-        }
-      });
-  }, []);
-
-  return (
-    <div style={{border: '1px solid black', borderRadius: '5px', padding: '10px', margin: '10px', backgroundColor: '#f0f0f0'}}>
-      <h2 style={{color: '#00698f'}}>Weather Clothing Suggestion</h2>
-      {weather && (
-        <div>
-          <p>Temperature: {weather.temp_c}°C</p>
-          <p>{suggestion}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-
 function App() {
   return (
  <section> 
-  <div style={{display: 'flex', flexDirection: 'column'}}>
-    <SLAPI style={{flex:3}}/>
- 
- 
-
-  <div style={{display: 'flex', flexDirection: 'row'}}>
-  <Overdue style={{flex: 1}}/>
-  <WeatherClothingSuggestion/>
+  <div>
+    {/* <SLAPI style={{flex:3}}/> */}
+<EmbeddedDashboard/>
   <DateTime />
-
-  </div>
   </div>
   </section>
 );

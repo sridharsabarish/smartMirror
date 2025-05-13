@@ -44,7 +44,7 @@ def build_web_page():
     
     out = get_sl_details()
     if not out:
-        return webpage.render_error_page(out)
+        return webpage.buildErrorCase(out)
     
     now = datetime.now()
     current_time = now.strftime("%H:%M")
