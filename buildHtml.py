@@ -1,65 +1,4 @@
-import requests
-from datetime import datetime
-from flask import Flask, render_template_string
 import assets
-import os
-from dotenv import load_dotenv, find_dotenv
-
-
-
-class APIRequest:
-    def getJson(self, url):
-        try:
-            response = requests.get(url, timeout=5)
-            response.raise_for_status()  # Raises HTTPError for bad responses
-            val = response.json()
-        except requests.exceptions.RequestException as e:
-            val = None  # Or handle the error as needed
-            print(f"An error occurred: {e}")
-        return val
-
-    def buildSLQ(self):
-        url = "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100"
-        try:
-            return self.getJson(url)
-        except requests.exceptions.RequestException as e:
-            print(f"An error occurred: {e}")
-            return []
-
-def getSLDetails():
-    
-    apiRequest = APIRequest();
-    #TODO: Perhaps raise an exception and handle it?
-    val = apiRequest.buildSLQ()
-    if not val:
-        return []
-    
-    
-    details_list = []
-    for i, departure in enumerate(val['departures']):
-        if i < 4:
-            truncated_destination = departure['destination'].split()[0]
-            details_list.append([truncated_destination, departure['display']])
-        else:
-            break
-    return details_list
-
-
-# Todo : Think how to refactor this one.
-def getWeatherDetails(city):
-    apiRequest = APIRequest();
-    load_dotenv()
-    api_key = os.getenv("API_KEY")
-
-    if not api_key:
-        print("Error: API_KEY not found in .env file.")
-
-    else:
-        url="http://api.weatherapi.com/v1/current.json?key="+api_key+"&q="+city+"&aqi=yes"      
-        val = apiRequest.getJson(url);
-        print(val)
-     
-
 class buildHtml:
     def buildErrorCase(self,out):
         if not out:
@@ -126,6 +65,7 @@ class buildHtml:
                 }
                 .container {
                     margin-top: 3rem;
+                    width: 100%;
                 }
                 .list-group-item {
                     margin-top: 0.5rem;
@@ -133,6 +73,7 @@ class buildHtml:
                     background-color: #2d3748;
                     border: none;
                     padding: 1rem;
+                    width: 100%;
                 }
                 .list-group-item:first-child {
                     margin-top: 0;
@@ -143,7 +84,7 @@ class buildHtml:
                     color: #fff;
                 }
                 .list-group-item h1 {
-                    font-size: 2.5rem;
+                    font-size: 7.5rem;
                 }
                 .list-group-item h2 {
                     font-size: 1.75rem;
@@ -152,7 +93,7 @@ class buildHtml:
                     font-size: 1.25rem;
                 }
                 .list-group {
-                    max-width: 40rem;
+                    max-width: 100%;
                 }
             </style>
         </head>
@@ -168,39 +109,92 @@ class buildHtml:
         """
         return html
 
-    def sl_ux(self,html,out):
-    
-        html += """
-            <div style="display: inline-block; vertical-align: top; width: 70%; text-align: center;">
-                <div class="list-group">
-        """
-        for i, dep in enumerate(out[:3]):
 
-            color = assets.ColorsInHex.BLUE  # default color
-            if dep[1][:2] == "Nu":
+    def create_div(self,html):
+        html += """
+            <div>
+        """
+        return html
+
+    def sl_ux(self,html,out):
+        
+        html += """
+            <div style="display: block; vertical-align: top; width: 100%; height: 100vh; text-align: center;">
+                <div class="list-group" style="height: 100%;">
+        """
+        print("i'm here")
+        print(out)
+        
+        
+        ## Todo : Good to refine a bit later
+        out_dict = {}
+        for dep in out:
+            if dep[0] not in out_dict:
+                out_dict[dep[0]] = [dep[1]]
+            else:
+                out_dict[dep[0]].append(dep[1])
+        
+        print(out_dict)
+        
+        
+        
+        html += """
+            <div style="display: block; vertical-align: top; width: 100%; text-align: center;">
+                <div class="list-group" style="height: 100%;">
+        """
+        for key, deps in out_dict.items():
+            if not key:
                 continue
+
+            for i, dep in enumerate(deps):
+                
+                
+                
+                if dep[:2] == "Nu":
+                    continue
+                color = assets.ColorsInHex.GREEN if 3 <= int(dep[:2]) < 7 else assets.ColorsInHex.BLUE
+                
+                
+                if i ==0:
+                    html += f"""
+                    <li class='list-group-item' style="height: 100%; display: flex; align-items: center; justify-content: center;">
+                        <h1 style='display: inline-block; font-size: 4rem; color: #ffa500;'>{key} <span style='color: {color};'>{dep}</span> </h1>
+                        <div style='font-size: 2rem'>
+                    """
+                else:
+                    html += f"<span style='color: #808080;'>{dep}</span> "
+            html += """
+                </div>
+            </li>
             
-            elif 3 <= int(dep[1][:2]) < 7:
-                color = assets.ColorsInHex.GREEN
+                <script>
+        setTimeout(function(){
+            window.location.reload(1);
+        }, 25000);
+    </script>
             
-            html += f"<li class='list-group-item'><h{i+1}><span style='color: #ffa500;'>{dep[0]}</span> <span style='color: #a0aec0;'> | </span> <span style='color: {color};'>{dep[1]}</span></h{i+1}></li>"
+            
+            """
+            
         html += """
                 </div>
             </div>
         """
+    
         return html
-        
+
         
     def inventory_ux(self,html,names):
         html += f"""
-        <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); text-align: center; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);">
+        <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); float: right; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); text-align: right;">
+            <div style="width: 100%;">
                 <p style="margin-bottom: 0; font-size: 1rem;">
                 <h2 style="margin: 0.5rem 0; color: #ff0000;"><span style="color: #ff0000; font-size: 1.5rem; margin-right: 0.5rem; display: inline-block;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="9.01"></line><line x1="12" y1="15" x2="12.01" y2="15"></line></svg></span><i class="fas fa-triangle-exclamation" style="color: #ff0000;"></i> Overdue Items</h2>
-            </p>
-            <ul style="list-style: none; padding: 0; margin: 0 10px;">
-            {"".join([f"<li style='margin-bottom: 0.5rem; font-size: 1.2rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:3])])}
-            </ul>
-
+                </p>
+                <ul style="list-style: none; padding: 0; margin: 0 10px;">
+                {"".join([f"<li style='margin-bottom: 0.5rem; font-size: 1.2rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:10])])}
+                </ul>
+            </div>
         </div>
         """
         return html
@@ -215,6 +209,12 @@ class buildHtml:
         return html
 
 
+
+    def close_div(self,html):
+        html+=f"""
+        </div>
+        """
+        return html
     def close_html(self,html):
         html+=f"""
         </body>
@@ -222,73 +222,16 @@ class buildHtml:
         """
         return html
 
-
-def buildWebPage():
-    webpage = buildHtml();
-    #Todo: Need to add weather to the info bar.
-    out1 = getWeatherDetails("stockholm");
-    
-    
-    out = getSLDetails()
-    if not out:
-        return webpage.buildErrorCase(out)
-    
-    now = datetime.now()
-    current_time = now.strftime("%H:%M")
-    date_today=datetime.today().strftime('%d-%m-%y')
-    
-    # Weather Segment
-    html = webpage.base_layout()
-    html = webpage.weather_ux(html)
-    html = webpage.sl_ux(html,out)
-    html = webpage.inventory_ux(html,names)
-    html = webpage.updated_ux(html,current_time, date_today)
-    html = webpage.close_html(html)
-    print("-----------")
-    print(html)
-    print("-----------")
-    return html
-   
-
-
-import json
-import requests
-
-def get_overdue():
-    try:
-        response = requests.get("http://0.0.0.0:5000/inventory/overdue")
-        response.raise_for_status()
-        #print(response.text)
-        return response.text
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
-        return None
-
-
-
-# General Code
-names=[]
-outjson=get_overdue()
-if outjson:
-    outjson = json.loads(outjson)
-    size_of_inv=len(outjson['inventory'])
-    for i in range(0,size_of_inv):
-        names.append(outjson['inventory'][i]['name'])
-        
-
-
-#Flask Related Stuff
-app = Flask(__name__)
-
-@app.route('/')
-def servePage():
-    html = buildWebPage()
-    return render_template_string(html)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=2000, debug=True)
-
-
-
-
+    def add_node_red_dashboard(self, html):
+        html += f"""
+        <div style="width: 80%; height: 400px; text-align: left; margin-top: 10px; display: flex; justify-content: flex-start;">
+            <div style="width: 58%; height: 80%;">
+                <!-- Left component goes here -->
+            </div>
+            <div style="width: 58%; height: 100%;">
+                <iframe src="http://192.168.0.105:1880/ui/" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+        </div>
+        """
+        return html
 

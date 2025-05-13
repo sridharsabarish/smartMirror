@@ -1,2 +1,10 @@
+<<<<<<< HEAD
 Flask==3.1.0
 requests==2.26.0
+||||||| merged common ancestors
+Flask==2.0.1
+requests==2.26.0
+=======
+Flask==3.1.0
+requests==2.32.3
+>>>>>>> ux-changes
