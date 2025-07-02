@@ -8,8 +8,6 @@ Some simple tests on API Request to a specific location.
 import requests
 from datetime import datetime
 from flask import Flask, render_template_string
-import assets
-
 
 def get_json(url):
     try:
