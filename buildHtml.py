@@ -1,4 +1,5 @@
 import assets
+from loguru import logger
 class buildHtml:
     def buildErrorCase(self,out):
         if not out:
@@ -107,6 +108,7 @@ class buildHtml:
         !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
         </script>
         """
+        
         return html
 
 
@@ -122,19 +124,20 @@ class buildHtml:
             <div style="display: block; vertical-align: top; width: 100%; height: 100vh; text-align: center;">
                 <div class="list-group" style="height: 100%;">
         """
-        print("i'm here")
-        print(out)
+        logger.trace("i'm here")
+        logger.debug(out)
         
         
         ## Todo : Good to refine a bit later
         out_dict = {}
+        logger.debug(out_dict)
         for dep in out:
             if dep[0] not in out_dict:
                 out_dict[dep[0]] = [dep[1]]
             else:
                 out_dict[dep[0]].append(dep[1])
         
-        print(out_dict)
+        logger.info(out_dict)
         
         
         
@@ -229,9 +232,26 @@ class buildHtml:
                 <!-- Left component goes here -->
             </div>
             <div style="width: 58%; height: 100%;">
-                <iframe src="http://192.168.0.105:1880/ui/" style="width: 100%; height: 100%; border: none;"></iframe>
+                <iframe src="http://192.168.0.107:1880/ui/" style="width: 100%; height: 100%; border: none;"></iframe>
             </div>
         </div>
         """
         return html
+    def __init__(self):
+        pass
+    def build_UI(self,out,current_time, date_today):
+        html = self.base_layout()
+        html = self.weather_ux(html)
+        html = self.create_div(html)
+        html = self.create_div(html)
+        html = self.sl_ux(html,out)
 
+        html = self.add_node_red_dashboard(html)
+        html = self.close_div(html)
+        #html = webpage.inventory_ux(html,names)
+        html = self.close_div(html)
+        
+
+        html = self.updated_ux(html,current_time, date_today)
+        html = self.close_html(html)
+        return html

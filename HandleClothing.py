@@ -21,6 +21,7 @@ class HandleClothing:
             from pprint import pprint
             temperature = val['current']['temp_c']
             layers=self.find_layers(temperature)
+            return layers
             
             
         
@@ -28,13 +29,13 @@ class HandleClothing:
         # Use the attributes from the weatherDetails and design clothing layers.
         layers = 1
         if temperature < 10:
-            layers =4
+            layers =3
         elif 10 <= temperature < 15:
-            layers = 3
-        elif 15 <= temperature < 20:
             layers = 2
-        elif 20 <= temperature < 30:
+        elif 15 <= temperature < 20:
             layers = 1
+        elif 20 <= temperature < 30:
+            layers = 0
         else:
             layers = 0
 

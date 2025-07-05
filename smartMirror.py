@@ -7,107 +7,72 @@ from dotenv import load_dotenv, find_dotenv
 from buildHtml import buildHtml
 from APIRequest import APIRequest
 from HandleClothing import HandleClothing
+from loguru import logger
 
 
-#TODO : General reorganization/cleanup of the code below
-def get_sl_details():
-    
-    apiRequest = APIRequest();
-    #TODO: Perhaps raise an exception and handle it?
-    val = apiRequest.fetch_sl_info()
-    if not val:
-        return []
-    
-    
-    details_list = []
-    for i, departure in enumerate(val['departures']):
-        if i < 10:
-            truncated_destination = departure['destination'].split()[0]
-            print(truncated_destination)
-            if(truncated_destination == ""):
-                continue
-            else:
-                details_list.append([truncated_destination, departure['display']])
-        else:
-            break
-    return details_list
-
-
-
-
-def build_web_page():
-    webpage = buildHtml();
-    #Todo: Need to add weather to the info bar.
-    clothing = HandleClothing()
-    out1 = clothing.get_weather_details("stockholm");
-    
-    
-    out = get_sl_details()
-    if not out:
-        return webpage.buildErrorCase(out)
-    
-    now = datetime.now()
-    current_time = now.strftime("%H:%M")
-    date_today=datetime.today().strftime('%d-%m-%y')
-    
-    # Weather Segment
-    html = webpage.base_layout()
-    html = webpage.weather_ux(html)
-    html = webpage.create_div(html)
-    html = webpage.create_div(html)
-    html = webpage.sl_ux(html,out)
-
-    #html = webpage.add_node_red_dashboard(html)
-    html = webpage.close_div(html)
-    #html = webpage.inventory_ux(html,names)
-    html = webpage.close_div(html)
-    
-
-    html = webpage.updated_ux(html,current_time, date_today)
-    html = webpage.close_html(html)
-    # print("-----------")
-    # print(html)
-    # print("-----------")
-    return html
-
-
-
-
-def get_overdue():
-    try:
-        response = requests.get("http://0.0.0.0:5000/inventory/overdue")
-        response.raise_for_status()
-        #print(response.text)
-        return response.text
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
-        return None
-
-
-
-# General Code
-names=[]
-outjson=get_overdue()
-if outjson:
-    outjson = json.loads(outjson)
-    size_of_inv=len(outjson['inventory'])
-    for i in range(0,size_of_inv):
-        names.append(outjson['inventory'][i]['name'])
+class smartMirror:
+    def get_sl_details(self):
         
+        apiRequest = APIRequest();
+        #TODO: Perhaps raise an exception and handle it?
+        val = apiRequest.fetch_sl_info()
+        if not val:
+            return []
+        
+        
+        details_list = []
+        for i, departure in enumerate(val['departures']):
+            if i < 10:
+                truncated_destination = departure['destination'].split()[0]
+                logger.debug(truncated_destination)
+                if(truncated_destination == ""):
+                    continue
+                else:
+                    details_list.append([truncated_destination, departure['display']])
+            else:
+                break
+        return details_list
 
+    def build_web_page(self):
+        webpage = buildHtml();
+        #Todo: Need to add weather to the info bar.
+        clothing = HandleClothing()
+        out1 = clothing.get_weather_details("stockholm");
+        logger.debug("Weather details: " + str(out1))
+        
+        
+        
+        
+        
+        out = self.get_sl_details()
+        if not out:
+            return webpage.buildErrorCase(out)
+        
+        now = datetime.now()
+        current_time = now.strftime("%H:%M")
+        date_today=datetime.today().strftime('%d-%m-%y')
+        
+        # Weather Segment
+        html = webpage.build_UI(out,current_time,date_today)
+        return html
 
-#Flask Related Stuff
-app = Flask(__name__)
+    def get_overdue(self):
+        try:
+            response = requests.get("http://0.0.0.0:5000/inventory/overdue")
+            response.raise_for_status()
+            #print(response.text)
+            return response.text
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+            return None
 
-@app.route('/')
-def serve_page():
-    html = build_web_page()
-    return render_template_string(html)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=7000, debug=True)
-
-
-
-
+    def __init__(self):
+        names=[]
+        outjson=self.get_overdue()
+        if outjson:
+            outjson = json.loads(outjson)
+            size_of_inv=len(outjson['inventory'])
+            for i in range(0,size_of_inv):
+                names.append(outjson['inventory'][i]['name'])     
+                pass
 
