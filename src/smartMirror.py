@@ -15,7 +15,9 @@ class smartMirror:
         
         apiRequest = APIRequest();
         #TODO: Perhaps raise an exception and handle it?
-        val = apiRequest.fetch_sl_info()
+        
+        url = "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100"
+        val = apiRequest.get_json(url)
         if not val:
             return []
         
@@ -60,10 +62,10 @@ class smartMirror:
         try:
             response = requests.get("http://0.0.0.0:5000/inventory/overdue")
             response.raise_for_status()
-            #print(response.text)
+            logger.trace(response.text)
             return response.text
         except requests.exceptions.RequestException as e:
-            print(f"An error occurred: {e}")
+            logger.error(f"An error occurred: {e}")
             return None
 
     def __init__(self):

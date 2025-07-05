@@ -8,33 +8,19 @@ Some simple tests on API Request to a specific location.
 import requests
 from datetime import datetime
 from flask import Flask, render_template_string
-
-def get_json(url):
-    try:
-        response = requests.get(url, timeout=5)
-        response.raise_for_status()  # Raises HTTPError for bad responses
-        
-        val = response.json()
-    except requests.exceptions.RequestException as e:
-        val = None  # Or handle the error as needed
-        print(f"An error occurred: {e}")
-    return val
-
-
-
-
+from loguru import logger
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from APIRequest import APIRequest
 import pytest
 
 @pytest.mark.parametrize("url", [
     "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100"
 ])
 def test_link(url):
-    out = get_json(url)
+    apirequest = APIRequest()
+    out = apirequest.get_json(url)
     assert out!=None
-    
-    
-# def test_flask_app_is_running():
-#     out = get_json("http://0.0.0.0:2000/")
-#     assert out!=None
     
 

@@ -3,7 +3,7 @@ from loguru import logger
 class buildHtml:
     def buildErrorCase(self,out):
         if not out:
-            print("Error: Could not build SL details page")
+            logger.error("Error: Could not build SL details page")
             html = """
             <html>
             <head>

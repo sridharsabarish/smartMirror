@@ -5,6 +5,7 @@ from flask import Flask, render_template_string
 import os
 from dotenv import load_dotenv, find_dotenv
 from APIRequest import APIRequest
+from loguru import logger
 class HandleClothing:
 # Todo : Think how to refactor this one.
     def get_weather_details(self,city):
@@ -13,7 +14,7 @@ class HandleClothing:
         api_key = os.getenv("API_KEY")
 
         if not api_key:
-            print("Error: API_KEY not found in .env file.")
+            logger.error("Error: API_KEY not found in .env file.")
 
         else:
             url="http://api.weatherapi.com/v1/current.json?key="+api_key+"&q="+city+"&aqi=yes"      
