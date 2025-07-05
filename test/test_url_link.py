@@ -20,12 +20,17 @@ def get_json(url):
         print(f"An error occurred: {e}")
     return val
 
-def test_sl_api_reacheable():
-    out = get_json("https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100")
-    assert out!=None
-    
-def test_inventory_app_is_running():
-    out = get_json("http://0.0.0.0:5000/inventory/overdue")
+
+
+
+import pytest
+
+@pytest.mark.parametrize("url", [
+    "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100",
+    "http://0.0.0.0:5000/inventory/overdue"
+])
+def test_link(url):
+    out = get_json(url)
     assert out!=None
     
     
