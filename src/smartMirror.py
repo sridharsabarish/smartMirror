@@ -4,9 +4,9 @@ from datetime import datetime
 from flask import Flask, render_template_string
 import os
 from dotenv import load_dotenv, find_dotenv
-from buildHtml import buildHtml
-from APIRequest import APIRequest
-from HandleClothing import HandleClothing
+from src.buildHtml import buildHtml
+from src.APIRequest import APIRequest
+from src.HandleClothing import HandleClothing
 from loguru import logger
 
 
@@ -38,9 +38,9 @@ class smartMirror:
     def build_web_page(self):
         webpage = buildHtml();
         #Todo: Need to add weather to the info bar.
-        clothing = HandleClothing()
-        out1 = clothing.get_weather_details("stockholm");
-        logger.debug("Weather details: " + str(out1))
+        # clothing = HandleClothing()
+        # # out1 = clothing.get_weather_details("stockholm");
+        # # logger.debug("Weather details: " + str(out1))
         
         
         
