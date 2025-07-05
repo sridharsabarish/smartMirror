@@ -26,8 +26,7 @@ def get_json(url):
 import pytest
 
 @pytest.mark.parametrize("url", [
-    "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100",
-    "http://0.0.0.0:5000/inventory/overdue"
+    "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100"
 ])
 def test_link(url):
     out = get_json(url)
