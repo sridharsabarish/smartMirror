@@ -1,4 +1,4 @@
-import assets
+import assets as assets
 from loguru import logger
 class buildHtml:
     def buildErrorCase(self,out):
@@ -45,7 +45,6 @@ class buildHtml:
             """
             return html
         
-
     def base_layout(self):
         html = """
         <html>
@@ -110,7 +109,6 @@ class buildHtml:
         """
         
         return html
-
 
     def create_div(self,html):
         html += """
@@ -210,8 +208,6 @@ class buildHtml:
         </div>
         """
         return html
-
-
 
     def close_div(self,html):
         html+=f"""

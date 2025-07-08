@@ -4,9 +4,9 @@ from datetime import datetime
 from flask import Flask, render_template_string
 import os
 from dotenv import load_dotenv, find_dotenv
-from src.buildHtml import buildHtml
-from src.APIRequest import APIRequest
-from src.HandleClothing import HandleClothing
+from buildHtml import buildHtml
+from APIRequest import APIRequest
+from HandleClothing import HandleClothing
 from loguru import logger
 
 
