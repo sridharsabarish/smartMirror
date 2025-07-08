@@ -150,7 +150,14 @@ class buildHtml:
             for i, dep in enumerate(deps):
                 
                 
+                logger.debug(i)
+                logger.debug(dep)
+                logger.debug(dep[-3:])
                 
+                
+                ## Todo : Remove this
+                if (dep[-3:] != "min"):
+                    continue
                 if dep[:2] == "Nu":
                     continue
                 color = assets.ColorsInHex.GREEN if 3 <= int(dep[:2]) < 7 else assets.ColorsInHex.BLUE
@@ -241,8 +248,7 @@ class buildHtml:
         html = self.create_div(html)
         html = self.create_div(html)
         html = self.sl_ux(html,out)
-
-        html = self.add_node_red_dashboard(html)
+        #html = self.add_node_red_dashboard(html)
         html = self.close_div(html)
         #html = webpage.inventory_ux(html,names)
         html = self.close_div(html)

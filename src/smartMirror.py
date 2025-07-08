@@ -41,11 +41,7 @@ class smartMirror:
         # clothing = HandleClothing()
         # # out1 = clothing.get_weather_details("stockholm");
         # # logger.debug("Weather details: " + str(out1))
-        
-        
-        
-        
-        
+
         out = self.get_sl_details()
         if not out:
             return webpage.buildErrorCase(out)
