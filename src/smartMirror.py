@@ -8,6 +8,13 @@ from buildHtml import buildHtml
 from APIRequest import APIRequest
 from HandleClothing import HandleClothing
 from loguru import logger
+import sys
+
+logger.remove()
+logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
+logger.add("logs.json", serialize=True)
+
+
 
 
 class smartMirror:

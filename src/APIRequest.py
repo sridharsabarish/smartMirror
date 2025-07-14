@@ -5,6 +5,10 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from buildHtml import buildHtml
 from loguru import logger
+import sys
+logger.remove()
+logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
+logger.add("logs.json", serialize=True)
 
 class APIRequest:
     def get_json(self, url):

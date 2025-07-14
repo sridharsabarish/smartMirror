@@ -6,6 +6,13 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from APIRequest import APIRequest
 from loguru import logger
+import sys
+
+
+logger.remove()
+logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
+logger.add("logs.json", serialize=True)
+
 class HandleClothing:
 # Todo : Think how to refactor this one.
     def get_weather_details(self,city):

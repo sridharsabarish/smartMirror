@@ -1,5 +1,10 @@
 import assets as assets
 from loguru import logger
+import sys
+logger.remove()
+logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
+logger.add("logs.json", serialize=True)
+
 class buildHtml:
     def buildErrorCase(self,out):
         if not out:
