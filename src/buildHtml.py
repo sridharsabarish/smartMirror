@@ -198,6 +198,8 @@ class buildHtml:
 
         
     def inventory_ux(self,html,names):
+        
+        logger.error("Came here")
         html += f"""
         <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); float: right; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); text-align: right;">
             <div style="width: 100%;">
@@ -247,7 +249,7 @@ class buildHtml:
         return html
     def __init__(self):
         pass
-    def build_UI(self,out,current_time, date_today):
+    def build_UI(self,out,current_time, date_today,names):
         html = self.base_layout()
         html = self.weather_ux(html)
         html = self.create_div(html)
@@ -255,7 +257,7 @@ class buildHtml:
         html = self.sl_ux(html,out)
         #html = self.add_node_red_dashboard(html)
         html = self.close_div(html)
-        #html = webpage.inventory_ux(html,names)
+        html = self.inventory_ux(html,names)
         html = self.close_div(html)
         
 

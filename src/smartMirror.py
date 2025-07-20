@@ -18,20 +18,22 @@ logger.add("logs.json", serialize=True)
 
 
 class smartMirror:
+    name = []
+    apiRequest = APIRequest();
     def get_sl_details(self):
         
-        apiRequest = APIRequest();
+        
         #TODO: Perhaps raise an exception and handle it?
         
         url = "https://transport.integration.sl.se/v1/sites/5502/departures?forecast=100"
-        val = apiRequest.get_json(url)
+        val = self.apiRequest.get_json(url)
         if not val:
             return []
         
         
         details_list = []
         for i, departure in enumerate(val['departures']):
-            if i < 10:
+            if i < 30:
                 truncated_destination = departure['destination'].split()[0]
                 logger.debug(truncated_destination)
                 if(truncated_destination == ""):
@@ -58,26 +60,25 @@ class smartMirror:
         date_today=datetime.today().strftime('%d-%m-%y')
         
         # Weather Segment
-        html = webpage.build_UI(out,current_time,date_today)
+        html = webpage.build_UI(out,current_time,date_today,names=self.names)
         return html
 
     def get_overdue(self):
         try:
-            response = requests.get("http://0.0.0.0:5000/inventory/overdue")
-            response.raise_for_status()
-            logger.trace(response.text)
-            return response.text
+            response = self.apiRequest.get_json("http://0.0.0.0:5000/inventory/overdue")
+            # response.raise_for_status()
+            logger.trace(response)
+            return response
         except requests.exceptions.RequestException as e:
             logger.error(f"An error occurred: {e}")
             return None
 
     def __init__(self):
-        names=[]
+        self.names=[]
         outjson=self.get_overdue()
         if outjson:
-            outjson = json.loads(outjson)
             size_of_inv=len(outjson['inventory'])
             for i in range(0,size_of_inv):
-                names.append(outjson['inventory'][i]['name'])     
+                self.names.append(outjson['inventory'][i]['name'])     
                 pass
 
