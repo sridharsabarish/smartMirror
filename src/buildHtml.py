@@ -1,6 +1,7 @@
 import assets as assets
 from loguru import logger
 import sys
+from HandleClothing import HandleClothing 
 logger.remove()
 logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
 logger.add("logs.json", serialize=True)
@@ -196,7 +197,28 @@ class buildHtml:
     
         return html
 
+    def print_clothing_layers(self, html):
+        layers = HandleClothing().get_weather_details("stockholm")
+        print("Layers", layers)
         
+        html += f"""
+        <div style="
+            background-color: #1E3A8A;  /* deep blue background */
+            color: #F8FAFC;            /* almost white text */
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            text-align: center;
+        ">
+            <strong>Recommended Layers:</strong><br>{layers}
+        </div>
+        """
+        return html
+
     def inventory_ux(self,html,names):
         
         logger.error("Came here")
@@ -252,8 +274,10 @@ class buildHtml:
     def build_UI(self,out,current_time, date_today,names):
         html = self.base_layout()
         html = self.weather_ux(html)
+    
         html = self.create_div(html)
         html = self.create_div(html)
+        html = self.print_clothing_layers(html)
         html = self.sl_ux(html,out)
         #html = self.add_node_red_dashboard(html)
         html = self.close_div(html)

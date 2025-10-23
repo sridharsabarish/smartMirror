@@ -31,8 +31,6 @@ class HandleClothing:
             layers=self.find_layers(temperature)
             return layers
             
-            
-        
     def find_layers(self,temperature):
         # Use the attributes from the weatherDetails and design clothing layers.
         layers = 1
