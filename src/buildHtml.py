@@ -1,6 +1,7 @@
 import assets as assets
 from loguru import logger
 import sys
+from getMeal import MealPlan
 from HandleClothing import HandleClothing 
 logger.remove()
 logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
@@ -197,6 +198,17 @@ class buildHtml:
     
         return html
 
+
+    def add_meals(self, html):
+        # Todo : Fix logic below to make it read correct key
+        print("Adding meals")
+        mealPlan = MealPlan();
+        json = mealPlan.return_json()
+        print(json[1])
+    
+
+
+
     def print_clothing_layers(self, html):
         layers = HandleClothing().get_weather_details("stockholm")
         print("Layers", layers)
@@ -284,7 +296,7 @@ class buildHtml:
         html = self.inventory_ux(html,names)
         html = self.close_div(html)
         
-
+        self.add_meals(html)
         html = self.updated_ux(html,current_time, date_today)
         html = self.close_html(html)
         return html

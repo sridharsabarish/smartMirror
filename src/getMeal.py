@@ -4,9 +4,9 @@ import datetime
 
 # NOTE: Remember to create meal_plan.csv and place it in the same directory
 # Format : Day,Breakfast,Lunch,Dinner
+# TODO : Think how to use a .csv or database instead 
+# TOdo : Think how to randomize the meals for health.
 class MealPlan:
-
-
     def __init__(self):
         self.meal_plan = {}
         self.generate_meal_plan(self.get_today())
@@ -29,9 +29,11 @@ class MealPlan:
         return today.strftime("%A")
     
     def print_meal_plan(self):
-        print("Breakfast:", self.meal_plan['Breakfast'])
-        print("Lunch:", self.meal_plan['Lunch'])
-        print("Dinner:", self.meal_plan['Dinner'])
+        import json
+        print(json.dumps(self.meal_plan, indent=4))
 
+    def return_json(self):
+        import json
+        return json.dumps(self.meal_plan, indent=4)
 meal_plans= MealPlan();
 meal_plans.print_meal_plan()
