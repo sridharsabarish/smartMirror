@@ -10,6 +10,7 @@ class MealPlan:
     def __init__(self):
         self.meal_plan = {}
         self.generate_meal_plan(self.get_today())
+        self.print_meal_plan()
         pass
    
     def generate_meal_plan(self,day_of_week):
@@ -28,12 +29,15 @@ class MealPlan:
         today = datetime.date.today()
         return today.strftime("%A")
     
-    def print_meal_plan(self):
-        import json
-        print(json.dumps(self.meal_plan, indent=4))
+
 
     def return_json(self):
         import json
-        return json.dumps(self.meal_plan, indent=4)
+        return json.dumps({"Breakfast": self.meal_plan["Breakfast"], "Lunch": self.meal_plan["Lunch"], "Dinner": self.meal_plan["Dinner"]})
+
+    def print_meal_plan(self):
+        import json
+        print(self.return_json())
+
 meal_plans= MealPlan();
 meal_plans.print_meal_plan()

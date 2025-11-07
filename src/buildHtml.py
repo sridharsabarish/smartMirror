@@ -202,9 +202,44 @@ class buildHtml:
     def add_meals(self, html):
         # Todo : Fix logic below to make it read correct key
         print("Adding meals")
-        mealPlan = MealPlan();
-        json = mealPlan.return_json()
-        print(json[1])
+        mealPlanObj = MealPlan();
+        breakfast = mealPlanObj.meal_plan['Breakfast']
+        lunch = mealPlanObj.meal_plan['Lunch']
+        dinner = mealPlanObj.meal_plan['Dinner']
+
+    
+   
+
+        # html += f"""
+        # <div style="
+        #     background-color: #1E3A8A;  /* deep blue background */
+        #     color: #F8FAFC;            /* almost white text */
+        #     border-radius: 12px;
+        #     padding: 16px;
+        #     margin-top: 12px;
+        #     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        #     font-family: 'Segoe UI', Roboto, sans-serif;
+        #     font-size: 1.1rem;
+        #     line-height: 1.5;
+        #     text-align: center;
+        # ">
+        #     <strong>Breakfast :</strong><br>{breakfast}
+        # </div>
+        # """
+        # return html
+
+        html += f"""
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: calc(40% - 20px); background-color: #45aaf2; color: #ffffff; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2); text-align: center;">
+            <h2 style="margin: 0.5rem 0;">Breakfast</h2>
+            <p style="margin: 0.5rem 0;">{breakfast}</p>
+            <h2 style="margin: 0.5rem 0;">Lunch</h2>
+            <p style="margin: 0.5rem 0;">{lunch}</p>
+            <h2 style="margin: 0.5rem 0;">Dinner</h2>
+            <p style="margin: 0.5rem 0;">{dinner}</p>
+        </div>
+        """
+        
+        return html
     
 
 
@@ -290,13 +325,15 @@ class buildHtml:
         html = self.create_div(html)
         html = self.create_div(html)
         html = self.print_clothing_layers(html)
+        html = self.add_meals(html)
         html = self.sl_ux(html,out)
         #html = self.add_node_red_dashboard(html)
         html = self.close_div(html)
         html = self.inventory_ux(html,names)
         html = self.close_div(html)
-        
-        self.add_meals(html)
+        self.create_div(html)
+      
+        html = self.close_div(html)
         html = self.updated_ux(html,current_time, date_today)
         html = self.close_html(html)
         return html
