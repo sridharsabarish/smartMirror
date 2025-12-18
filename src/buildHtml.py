@@ -167,7 +167,7 @@ class buildHtml:
                     continue
                 if dep[:2] == "Nu":
                     continue
-                color = assets.ColorsInHex.GREEN if 3 <= int(dep[:2]) < 7 else assets.ColorsInHex.BLUE
+                color = assets.ColorsInHex.GREEN if 10 <= int(dep[:2]) < 10 else assets.ColorsInHex.BLUE
                 
                 
                 if i ==0:
@@ -322,14 +322,15 @@ class buildHtml:
         html = self.base_layout()
         html = self.weather_ux(html)
     
-        html = self.create_div(html)
-        html = self.create_div(html)
-        html = self.print_clothing_layers(html)
-        html = self.add_meals(html)
+        # html = self.create_div(html)
+        # html = self.create_div(html)
+        # html = self.print_clothing_layers(html)
+        # html = self.add_meals(html)
         html = self.sl_ux(html,out)
         #html = self.add_node_red_dashboard(html)
-        html = self.close_div(html)
         html = self.inventory_ux(html,names)
+        html = self.close_div(html)
+      
         html = self.close_div(html)
         self.create_div(html)
       
