@@ -34,7 +34,10 @@ class HandleClothing:
     def find_layers(self,temperature):
         # Use the attributes from the weatherDetails and design clothing layers.
         layers = 1
-        if temperature < 10:
+
+        if temperature < 0:
+            layers = 4
+        elif 0 <= temperature < 10:
             layers =3
         elif 10 <= temperature < 15:
             layers = 2

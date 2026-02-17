@@ -3,6 +3,7 @@ from loguru import logger
 import sys
 from getMeal import MealPlan
 from HandleClothing import HandleClothing 
+from datetime import datetime
 logger.remove()
 logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
 logger.add("logs.json", serialize=True)
@@ -109,7 +110,7 @@ class buildHtml:
         return html
     def weather_ux(self,html):
         html += """
-                <a class="weatherwidget-io" href="https://forecast7.com/en/59d4417d94/sollentuna/" data-label_1="SOLLENTUNA" data-label_2="WEATHER" data-theme="original" >SOLLENTUNA WEATHER</a>
+                <a class="weatherwidget-io" href="https://forecast7.com/en/59d4417d94/sollentuna/" data-label_1="Tǎby" data-label_2="WEATHER" data-theme="original" >Tǎby WEATHER</a>
         <script>
         !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
         </script>
@@ -247,7 +248,7 @@ class buildHtml:
     def print_clothing_layers(self, html):
         layers = HandleClothing().get_weather_details("stockholm")
         print("Layers", layers)
-        
+        week_number = datetime.now().isocalendar()[1]
         html += f"""
         <div style="
             background-color: #1E3A8A;  /* deep blue background */
@@ -261,9 +262,15 @@ class buildHtml:
             line-height: 1.5;
             text-align: center;
         ">
-            <strong>Recommended Layers:</strong><br>{layers}
-        </div>
+        <strong> Week Number:</strong> {week_number} <br>
+        <strong>Recommended Layers:</strong> {layers}<br>
+             
+</div>
+    
         """
+      
+
+
         return html
 
     def inventory_ux(self,html,names):
@@ -322,13 +329,13 @@ class buildHtml:
         html = self.base_layout()
         html = self.weather_ux(html)
     
-        # html = self.create_div(html)
-        # html = self.create_div(html)
-        # html = self.print_clothing_layers(html)
-        # html = self.add_meals(html)
+        html = self.create_div(html)
+        html = self.create_div(html)
+        html = self.print_clothing_layers(html)
+        html = self.add_meals(html)
         html = self.sl_ux(html,out)
         #html = self.add_node_red_dashboard(html)
-        html = self.inventory_ux(html,names)
+        #html = self.inventory_ux(html,names)
         html = self.close_div(html)
       
         html = self.close_div(html)

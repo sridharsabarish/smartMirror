@@ -26,7 +26,7 @@ class smartMirror:
         
         #TODO: Perhaps raise an exception and handle it?
         
-        url = "https://transport.integration.sl.se/v1/sites/9668/departures?forecast=100"
+        url = "https://transport.integration.sl.se/v1/sites/2232/departures?forecast=100"
         val = self.apiRequest.get_json(url)
         if not val:
             return []
@@ -43,11 +43,37 @@ class smartMirror:
                     continue
                 else:
 
-                    if("Stockholm" in truncated_destination):
-
+                  
+                    if "Danderyds" in truncated_destination:
                         details_list.append([truncated_destination, departure['display']])
             else:
                 break
+
+        url = "https://transport.integration.sl.se/v1/sites/9668/departures?forecast=100"
+        val = self.apiRequest.get_json(url)
+        if not val:
+            return []
+        
+        
+        # details_list = []
+        for i, departure in enumerate(val['departures']):
+
+
+            if i < 30:
+                truncated_destination = departure['destination'].split()[0]
+                logger.debug(truncated_destination)
+                if(truncated_destination == ""):
+                    continue
+                else:
+
+                  
+                    if "Stockholm" in truncated_destination:
+                        details_list.append([truncated_destination, departure['display']])
+            else:
+                break
+
+
+
         return details_list
 
     def build_web_page(self):
