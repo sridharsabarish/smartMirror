@@ -7,7 +7,7 @@ from datetime import datetime
 logger.remove()
 logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
 logger.add("logs.json", serialize=True)
-
+from datetime import datetime, date
 class buildHtml:
     def buildErrorCase(self,out):
         if not out:
@@ -242,8 +242,17 @@ class buildHtml:
         
         return html
     
-
-
+    def countdown_to_april_15(self, html):
+        today = date.today()
+        april_15 = date(today.year, 4, 15)
+        delta = april_15 - today
+        html += f"""
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: calc(40% - 20px); background-color: #45aaf2; color: #ffffff; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2); text-align: center;">
+            <h2 style="margin: 0.5rem 0;">Countdown to Yocto Course</h2>
+            <p style="margin: 0.5rem 0;">{delta.days} days, {delta.seconds // 3600} hours, {(delta.seconds // 60) % 60} minutes and {delta.seconds % 60} seconds.</p>
+        </div>
+        """
+        return html
 
     def print_clothing_layers(self, html):
         layers = HandleClothing().get_weather_details("stockholm")
@@ -328,12 +337,14 @@ class buildHtml:
     def build_UI(self,out,current_time, date_today,names):
         html = self.base_layout()
         html = self.weather_ux(html)
+        html = self.countdown_to_april_15(html)
     
         html = self.create_div(html)
         html = self.create_div(html)
         html = self.print_clothing_layers(html)
         html = self.add_meals(html)
         html = self.sl_ux(html,out)
+  
         #html = self.add_node_red_dashboard(html)
         #html = self.inventory_ux(html,names)
         html = self.close_div(html)
