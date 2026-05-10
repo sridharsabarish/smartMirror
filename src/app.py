@@ -1,5 +1,5 @@
 from flask import Flask, render_template_string
-from smartMirror import smartMirror
+from classes.smartMirror import smartMirror
 
 import datetime
 import csv

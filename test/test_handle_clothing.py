@@ -4,7 +4,7 @@ import os
 
 # Add the parent directory to the system path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src/')))
-from HandleClothing import HandleClothing
+from classes.HandleClothing import HandleClothing
 
 import pytest
 

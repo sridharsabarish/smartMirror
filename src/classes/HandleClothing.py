@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import Flask, render_template_string
 import os
 from dotenv import load_dotenv, find_dotenv
-from APIRequest import APIRequest
+from classes.APIRequest import APIRequest
 from loguru import logger
 import sys
 

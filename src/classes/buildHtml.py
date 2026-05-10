@@ -1,12 +1,15 @@
-import assets as assets
+from tkinter.font import names
+
+import classes.assets as assets
 from loguru import logger
 import sys
-from getMeal import MealPlan
-from HandleClothing import HandleClothing 
+from classes.getMeal import MealPlan
+from classes.HandleClothing import HandleClothing 
 from datetime import datetime
 logger.remove()
 logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
 logger.add("logs.json", serialize=True)
+import requests
 from datetime import datetime, date
 class buildHtml:
     def buildErrorCase(self,out):
@@ -200,6 +203,40 @@ class buildHtml:
         return html
 
 
+
+
+    def add_temperature_and_humidity(self, html):
+
+        print("Adding temperature and humidity")
+        try:
+            response = requests.get("http://localhost:3000/data")
+            living_room_data = response.json()
+            living_room_temperature = living_room_data["temperature"]
+            living_room_humidity = living_room_data["humidity"]
+
+            response = requests.get("http://localhost:3000/data1")
+            bed_room_data = response.json()
+            bed_room_temperature = bed_room_data["temperature"]
+            bed_room_humidity = bed_room_data["humidity"]
+
+            html += f"""
+            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+                <div style="width: calc(50% - 20px); background-color: #ffa500; color: #ffffff; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2); text-align: center;">
+                    <h2 style="margin: 0.5rem 0;"> Living Room </h2>
+                    <p style="margin: 0.5rem 0; color: #ffffff;">Temperature: {living_room_temperature} &deg;C</p>
+                    <p style="margin: 0.5rem 0; color: #ffffff;">Humidity: {living_room_humidity} %</p>
+                </div>
+                <div style="width: calc(50% - 20px); background-color: #00bfff; color: #000000; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2); text-align: center;">
+                    <h2 style="margin: 0.5rem 0;"> Bed Room </h2>
+                    <p style="margin: 0.5rem 0; color: #000000;">Temperature: {bed_room_temperature} &deg;C</p>
+                    <p style="margin: 0.5rem 0; color: #000000;">Humidity: {bed_room_humidity} %</p>
+                </div>
+            </div>
+            """
+        except Exception as e:
+            print("something wrong with fetching temp and humidity")
+            logger.error(e)
+        return html
     def add_meals(self, html):
         # Todo : Fix logic below to make it read correct key
         print("Adding meals")
@@ -241,6 +278,22 @@ class buildHtml:
         """
         
         return html
+    def inventory_ux(self,html,names):
+        
+        logger.error("Came here")
+        html += f"""
+        <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); float: right; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); text-align: right;">
+            <div style="width: 100%;">
+                <p style="margin-bottom: 0; font-size: 1rem;">
+                <h2 style="margin: 0.5rem 0; color: #ff0000;"><span style="color: #ff0000; font-size: 1.5rem; margin-right: 0.5rem; display: inline-block;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="9.01"></line><line x1="12" y1="15" x2="12.01" y2="15"></line></svg></span><i class="fas fa-triangle-exclamation" style="color: #ff0000;"></i> Overdue Items</h2>
+                </p>
+                <ul style="list-style: none; padding: 0; margin: 0 10px;">
+                {"".join([f"<li style='margin-bottom: 0.5rem; font-size: 1.2rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:10])])}
+                </ul>
+            </div>
+        </div>
+        """
+        return html
     
     def countdown_to_april_15(self, html):
         today = date.today()
@@ -248,8 +301,8 @@ class buildHtml:
         delta = april_15 - today
         html += f"""
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: calc(40% - 20px); background-color: #45aaf2; color: #ffffff; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2); text-align: center;">
-            <h2 style="margin: 0.5rem 0;">Countdown to Yocto Course</h2>
-            <p style="margin: 0.5rem 0;">{delta.days} days, {delta.seconds // 3600} hours, {(delta.seconds // 60) % 60} minutes and {delta.seconds % 60} seconds.</p>
+            <h2 style="margin: 0.5rem 0;">Countdown to April 15</h2>
+            <p style="margin: 0.5rem 0;">{delta.days} days</p>
         </div>
         """
         return html
@@ -282,22 +335,6 @@ class buildHtml:
 
         return html
 
-    def inventory_ux(self,html,names):
-        
-        logger.error("Came here")
-        html += f"""
-        <div style="display: inline-block; vertical-align: top; width: calc(30% - 20px); float: right; background-color: #ffffe0; padding: 1px; border-radius: 1px; box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2); text-align: right;">
-            <div style="width: 100%;">
-                <p style="margin-bottom: 0; font-size: 1rem;">
-                <h2 style="margin: 0.5rem 0; color: #ff0000;"><span style="color: #ff0000; font-size: 1.5rem; margin-right: 0.5rem; display: inline-block;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-alert-triangle"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="9.01"></line><line x1="12" y1="15" x2="12.01" y2="15"></line></svg></span><i class="fas fa-triangle-exclamation" style="color: #ff0000;"></i> Overdue Items</h2>
-                </p>
-                <ul style="list-style: none; padding: 0; margin: 0 10px;">
-                {"".join([f"<li style='margin-bottom: 0.5rem; font-size: 1.2rem;'><i class='fas fa-exclamation-circle' style='color: #ffcc00;'></i> {index + 1}. {name}</li>" for index, name in enumerate(names[:10])])}
-                </ul>
-            </div>
-        </div>
-        """
-        return html
     def updated_ux(self,html,current_time, date_today):
         html += f"""
         <div style="width: 100%; text-align: center;">
@@ -337,22 +374,31 @@ class buildHtml:
     def build_UI(self,out,current_time, date_today,names):
         html = self.base_layout()
         html = self.weather_ux(html)
-        html = self.countdown_to_april_15(html)
+        #html = self.inventory_ux(html,names)
+
+        html = self.add_temperature_and_humidity(html)
+        
     
         html = self.create_div(html)
         html = self.create_div(html)
         html = self.print_clothing_layers(html)
+    
+        #html = self.countdown_to_april_15(html)
+  
         html = self.add_meals(html)
         html = self.sl_ux(html,out)
   
         #html = self.add_node_red_dashboard(html)
-        #html = self.inventory_ux(html,names)
+     
         html = self.close_div(html)
+
+
       
         html = self.close_div(html)
         self.create_div(html)
-      
+   
         html = self.close_div(html)
         html = self.updated_ux(html,current_time, date_today)
         html = self.close_html(html)
         return html
+

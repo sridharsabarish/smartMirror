@@ -4,12 +4,14 @@ from datetime import datetime
 from flask import Flask, render_template_string
 import os
 from dotenv import load_dotenv, find_dotenv
-from buildHtml import buildHtml
-from APIRequest import APIRequest
-from HandleClothing import HandleClothing
+from classes.buildHtml import buildHtml
+from classes.APIRequest import APIRequest
+from classes.HandleClothing import HandleClothing
 from loguru import logger
 import sys
 import time
+
+
 
 logger.remove()
 logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
@@ -45,7 +47,7 @@ class smartMirror:
 
                   
                     if "Danderyds" in truncated_destination:
-                        details_list.append([truncated_destination, departure['display']])
+                        details_list.append(["Danderyds (6 min 🚶)", departure['display']])
             else:
                 break
 
@@ -68,7 +70,7 @@ class smartMirror:
 
                   
                     if "Stockholm" in truncated_destination:
-                        details_list.append([truncated_destination, departure['display']])
+                        details_list.append(["Stockholms (11  min🚶)", departure['display']])
             else:
                 break
 
@@ -97,7 +99,7 @@ class smartMirror:
 
     def get_overdue(self):
         try:
-            response = self.apiRequest.get_json("http://0.0.0.0:5000/inventory/overdue")
+            response = self.apiRequest.get_json("http://0.0.0.0:5003/inventory/overdue")
             # response.raise_for_status()
             logger.trace(response)
             return response
