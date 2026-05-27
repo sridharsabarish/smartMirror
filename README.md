@@ -21,17 +21,16 @@ The tool is aimed  at providing the following features
     - `git clone https://github.com/sridharsabarish/smartMirror.git`
 - Clone the Inventory Manager
     - `git clone https://github.com/sridharsabarish/easyInventory.git`
-- Start the inventory app
-    - `python3 -m app.py`
-- Start the Smart mirror app
-    - `python3 simpleAPIClient.py`
+- Run the command
+    - `make run`
+
 - Open the link
-    - `http://0.0.0.0:2000/`
+    - `http://0.0.0.0:8000/`
 
 
 # Testing
 
-- Run Test Cases using `python3 -m pytest` 
+- Run Test Cases using `python3 -m pytest`
 
 
 # Weather API

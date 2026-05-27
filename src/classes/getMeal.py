@@ -15,7 +15,7 @@ class MealPlan:
    
     def generate_meal_plan(self,day_of_week):
         
-        with open('meal_plan.csv', 'r') as file:
+        with open('src/meal_plan.csv', 'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 if row['Day'] == day_of_week:

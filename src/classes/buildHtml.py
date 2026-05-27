@@ -385,7 +385,7 @@ class buildHtml:
     
         #html = self.countdown_to_april_15(html)
   
-        html = self.add_meals(html)
+        #html = self.add_meals(html)
         html = self.sl_ux(html,out)
   
         #html = self.add_node_red_dashboard(html)
