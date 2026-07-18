@@ -3,8 +3,6 @@ from tkinter.font import names
 import classes.assets as assets
 from loguru import logger
 import sys
-from classes.getMeal import MealPlan
-from classes.HandleClothing import HandleClothing 
 from datetime import datetime
 logger.remove()
 logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
@@ -202,82 +200,6 @@ class buildHtml:
     
         return html
 
-
-
-
-    def add_temperature_and_humidity(self, html):
-
-        print("Adding temperature and humidity")
-        try:
-            response = requests.get("http://localhost:3000/data")
-            living_room_data = response.json()
-            living_room_temperature = living_room_data["temperature"]
-            living_room_humidity = living_room_data["humidity"]
-
-            response = requests.get("http://localhost:3000/data1")
-            bed_room_data = response.json()
-            bed_room_temperature = bed_room_data["temperature"]
-            bed_room_humidity = bed_room_data["humidity"]
-
-            html += f"""
-            <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
-                <div style="width: calc(50% - 20px); background-color: #ffa500; color: #ffffff; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2); text-align: center;">
-                    <h2 style="margin: 0.5rem 0;"> Living Room </h2>
-                    <p style="margin: 0.5rem 0; color: #ffffff;">Temperature: {living_room_temperature} &deg;C</p>
-                    <p style="margin: 0.5rem 0; color: #ffffff;">Humidity: {living_room_humidity} %</p>
-                </div>
-                <div style="width: calc(50% - 20px); background-color: #00bfff; color: #000000; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2); text-align: center;">
-                    <h2 style="margin: 0.5rem 0;"> Bed Room </h2>
-                    <p style="margin: 0.5rem 0; color: #000000;">Temperature: {bed_room_temperature} &deg;C</p>
-                    <p style="margin: 0.5rem 0; color: #000000;">Humidity: {bed_room_humidity} %</p>
-                </div>
-            </div>
-            """
-        except Exception as e:
-            print("something wrong with fetching temp and humidity")
-            logger.error(e)
-        return html
-    def add_meals(self, html):
-        # Todo : Fix logic below to make it read correct key
-        print("Adding meals")
-        mealPlanObj = MealPlan();
-        breakfast = mealPlanObj.meal_plan['Breakfast']
-        lunch = mealPlanObj.meal_plan['Lunch']
-        dinner = mealPlanObj.meal_plan['Dinner']
-
-    
-   
-
-        # html += f"""
-        # <div style="
-        #     background-color: #1E3A8A;  /* deep blue background */
-        #     color: #F8FAFC;            /* almost white text */
-        #     border-radius: 12px;
-        #     padding: 16px;
-        #     margin-top: 12px;
-        #     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-        #     font-family: 'Segoe UI', Roboto, sans-serif;
-        #     font-size: 1.1rem;
-        #     line-height: 1.5;
-        #     text-align: center;
-        # ">
-        #     <strong>Breakfast :</strong><br>{breakfast}
-        # </div>
-        # """
-        # return html
-
-        html += f"""
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: calc(40% - 20px); background-color: #45aaf2; color: #ffffff; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2); text-align: center;">
-            <h2 style="margin: 0.5rem 0;">Breakfast</h2>
-            <p style="margin: 0.5rem 0;">{breakfast}</p>
-            <h2 style="margin: 0.5rem 0;">Lunch</h2>
-            <p style="margin: 0.5rem 0;">{lunch}</p>
-            <h2 style="margin: 0.5rem 0;">Dinner</h2>
-            <p style="margin: 0.5rem 0;">{dinner}</p>
-        </div>
-        """
-        
-        return html
     def inventory_ux(self,html,names):
         
         logger.error("Came here")
@@ -295,46 +217,6 @@ class buildHtml:
         """
         return html
     
-    def countdown_to_april_15(self, html):
-        today = date.today()
-        april_15 = date(today.year, 4, 15)
-        delta = april_15 - today
-        html += f"""
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: calc(40% - 20px); background-color: #45aaf2; color: #ffffff; padding: 0.5rem; border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem 0 rgba(0,0,0,0.2); text-align: center;">
-            <h2 style="margin: 0.5rem 0;">Countdown to April 15</h2>
-            <p style="margin: 0.5rem 0;">{delta.days} days</p>
-        </div>
-        """
-        return html
-
-    def print_clothing_layers(self, html):
-        layers = HandleClothing().get_weather_details("stockholm")
-        print("Layers", layers)
-        week_number = datetime.now().isocalendar()[1]
-        html += f"""
-        <div style="
-            background-color: #1E3A8A;  /* deep blue background */
-            color: #F8FAFC;            /* almost white text */
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            font-size: 1.1rem;
-            line-height: 1.5;
-            text-align: center;
-        ">
-        <strong> Week Number:</strong> {week_number} <br>
-        <strong>Recommended Layers:</strong> {layers}<br>
-             
-</div>
-    
-        """
-      
-
-
-        return html
-
     def updated_ux(self,html,current_time, date_today):
         html += f"""
         <div style="width: 100%; text-align: center;">
@@ -357,18 +239,6 @@ class buildHtml:
         """
         return html
 
-    def add_node_red_dashboard(self, html):
-        html += f"""
-        <div style="width: 80%; height: 400px; text-align: left; margin-top: 10px; display: flex; justify-content: flex-start;">
-            <div style="width: 58%; height: 80%;">
-                <!-- Left component goes here -->
-            </div>
-            <div style="width: 58%; height: 100%;">
-                <iframe src="http://192.168.0.107:1880/ui/" style="width: 100%; height: 100%; border: none;"></iframe>
-            </div>
-        </div>
-        """
-        return html
     def __init__(self):
         pass
     def build_UI(self,out,current_time, date_today,names):
@@ -376,27 +246,15 @@ class buildHtml:
         html = self.weather_ux(html)
         #html = self.inventory_ux(html,names)
 
-        html = self.add_temperature_and_humidity(html)
+        #html = self.add_temperature_and_humidity(html)
         
     
         html = self.create_div(html)
         html = self.create_div(html)
-        html = self.print_clothing_layers(html)
-    
-        #html = self.countdown_to_april_15(html)
-  
-        #html = self.add_meals(html)
         html = self.sl_ux(html,out)
-  
-        #html = self.add_node_red_dashboard(html)
-     
         html = self.close_div(html)
-
-
-      
         html = self.close_div(html)
         self.create_div(html)
-   
         html = self.close_div(html)
         html = self.updated_ux(html,current_time, date_today)
         html = self.close_html(html)

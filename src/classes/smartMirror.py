@@ -6,7 +6,6 @@ import os
 from dotenv import load_dotenv, find_dotenv
 from classes.buildHtml import buildHtml
 from classes.APIRequest import APIRequest
-from classes.HandleClothing import HandleClothing
 from loguru import logger
 import sys
 import time
@@ -47,7 +46,7 @@ class smartMirror:
 
                   
                     if "Danderyds" in truncated_destination:
-                        details_list.append(["Danderyds (6 min 🚶)", departure['display']])
+                        details_list.append(["  🚌 Dand", departure['display']])
             else:
                 break
 
@@ -70,7 +69,7 @@ class smartMirror:
 
                   
                     if "Stockholm" in truncated_destination:
-                        details_list.append(["Stockholms (11  min🚶)", departure['display']])
+                        details_list.append(["🚂 Stockholm", departure['display']])
             else:
                 break
 
@@ -80,11 +79,6 @@ class smartMirror:
 
     def build_web_page(self):
         webpage = buildHtml();
-        #Todo: Need to add weather to the info bar.
-        # clothing = HandleClothing()
-        # # out1 = clothing.get_weather_details("stockholm");
-        # # logger.debug("Weather details: " + str(out1))
-
         out = self.get_sl_details()
         if not out:
             return webpage.buildErrorCase(out)
