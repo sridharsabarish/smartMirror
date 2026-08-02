@@ -3,8 +3,8 @@ from smartMirror import smartMirror
 class TestWeather:
 
     def test_API_KEY_exists(self):
-        read_api_key_from_env()
-        assert True
+        assert read_api_key_from_env()
+       
 
     def test_check_api_key_works(self):
         load_weather()
