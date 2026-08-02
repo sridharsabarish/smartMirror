@@ -1,16 +1,20 @@
-from weatherAPI import load_weather,read_api_key_from_env
+from weatherAPI import WeatherAPI
 from smartMirror import smartMirror
+import pytest
+
+TEST_DATA = ["Stockholm", "Chennai", "New Delhi"]
 class TestWeather:
 
     def test_API_KEY_exists(self):
-        assert read_api_key_from_env()
-       
+        weatherObj = WeatherAPI()
+        assert weatherObj.read_api_key_from_env()
 
-    def test_check_api_key_works(self):
-        load_weather()
-        assert True
-
-
+    @pytest.mark.parametrize("t",TEST_DATA)
+    def test_check_api_key_works(self,t):
+        weatherObj = WeatherAPI()
+        out = weatherObj.load_weather(city=t)
+        print(out)
+        assert len(out)>0
 
 class TestClimate:
     def test_get_soil_health(self):

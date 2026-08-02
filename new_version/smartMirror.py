@@ -108,7 +108,7 @@ class smartMirror:
         out = {}
         try:
             POETRY_DB_URL="https://poetrydb.org/random"
-            out = self.make_api_call_xml(url=POETRY_DB_URL)
+            out = self.make_api_call(url=POETRY_DB_URL)
             print(out)
         except:
             print("Some Error Occured in call_poetry_db_api")

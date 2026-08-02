@@ -32,7 +32,6 @@ class TestTransport:
  
 class TestMisc:
 
-    @pytest.mark.skip
     def test_get_random_poems(self):
 
         try:
