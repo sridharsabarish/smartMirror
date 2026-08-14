@@ -30,7 +30,6 @@ class WeatherAPI:
 
 
     def read_api_key_from_env(self):
-
         load_dotenv(find_dotenv())
         self.api_key = os.getenv("API_KEY")
 

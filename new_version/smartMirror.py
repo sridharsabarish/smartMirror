@@ -153,6 +153,7 @@ class smartMirror:
         if room =="living_room" or room =="bed_room":
             mqttObj = MQTT()
             output = mqttObj.listen_to_mqtt(room);
+            return output
             return {"temperature":30, "humidity":20}
         
     def get_date(self):

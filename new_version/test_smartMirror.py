@@ -5,8 +5,26 @@ import pytest
 from paho.mqtt import client as mqtt_client
 
 
+
+
+def get_destinations():
+    mirror = smartMirror()
+    out = mirror.get_buses();
+    unique_dest = []
+    departures = out["departures"]
+    unique_dest= mirror.get_all_unique_destination(departures) 
+
+    return unique_dest
+
+
+DESTINATIONS = get_destinations()
+
 class TestTransport:
-    def test_get_sl_buses(self):
+
+
+
+    @pytest.mark.parametrize("dest",DESTINATIONS)
+    def test_get_sl_buses(self,dest):
         mirror = smartMirror()
         out = mirror.get_buses();
         assert len(out) >0 
@@ -14,7 +32,7 @@ class TestTransport:
             departures = out["departures"]
             assert departures is not None
             assert mirror.get_all_unique_destination(departures) is  not None
-            assert mirror.get_all_times_for_a_destination(destination='Danderyds sjukhus',departures=departures) is not None
+            assert mirror.get_all_times_for_a_destination(destination=dest,departures=departures) is not None
         except:
             assert False
     def test_get_sl_trains(self):

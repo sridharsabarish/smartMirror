@@ -56,4 +56,7 @@ class MQTT:
         #TODO : Implement the listener
         return {}
 
-    
+class Notify:
+    def sendAlerts(self,message):
+        #TODO: Implement the mechanism to send alerts
+        print("Sending alert : ", message)
