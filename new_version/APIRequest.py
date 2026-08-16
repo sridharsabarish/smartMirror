@@ -11,6 +11,13 @@ logger.remove()
 logger.add(sys.stdout, format="{time} | {level} | {message}", serialize=True)
 logger.add("logs.json", serialize=True)
 
+
+import json
+import paho.mqtt.subscribe as subscribe
+
+
+
+
 class APIRequest:
     def get_json(self, url):
         try:
@@ -54,6 +61,23 @@ class MQTT:
 
     def listen_to_mqtt(self,topic):
         #TODO : Implement the listener
+
+        msg = subscribe.simple(
+            topic,
+            hostname=self.broker,
+            port=1883,
+            auth={
+                "username": self.username,
+                "password": self.password
+            },
+        )
+
+        payload = json.loads(msg.payload.decode("utf-8"))
+
+        print(payload)
+
+
+
         return {}
 
 class Notify:
