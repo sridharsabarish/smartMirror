@@ -16,7 +16,7 @@ class WeatherAPI:
     def load_weather(self,city="Stockholm"):
         #TODO : Implement the logic
         print("City is : ", city)
-        WEATHER_URL = "http://api.weatherapi.com/v1/current.json?key="+str(self.api_key)+"&q="+city+"&aqi=yes"      
+        WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather?appid="+str(self.api_key)+"&q="+city+"&aqi=yes"      
         print(WEATHER_URL)
 
         try:

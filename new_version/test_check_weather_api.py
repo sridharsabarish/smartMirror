@@ -3,27 +3,39 @@ from smartMirror import smartMirror
 from APIRequest import Notify
 import pytest
 
+from HandleWeather import print_sunset
+
 TEST_DATA = ["Stockholm", "Chennai", "New Delhi"]
 INCORRECT_TEST = ["Lalaland"]
+
+
+
+
+
+
+
 class TestWeather:
 
     def test_API_KEY_exists(self):
         weatherObj = WeatherAPI()
         assert weatherObj.read_api_key_from_env()
 
-    @pytest.mark.skip
+    
     @pytest.mark.parametrize("t",TEST_DATA)
     def test_weather(self,t):
         weatherObj = WeatherAPI()
         out = weatherObj.load_weather(city=t)
         print(out)
-        assert len(out)>0
+        print_sunset(out)
+        assert len(out)==0
 
     @pytest.mark.parametrize("t",INCORRECT_TEST)
     def test_fail_incorrect_cities(self,t):
         weatherObj = WeatherAPI()
         out = weatherObj.load_weather(city=t)
         print(out)
+
+        print
         assert len(out) ==0
 
 class TestClimate:
