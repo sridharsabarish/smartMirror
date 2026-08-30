@@ -26,7 +26,7 @@ class APIRequest:
             val = response.json()
         except requests.exceptions.RequestException as e:
             val = None  # Or handle the error as needed
-            print("error". e)
+
             logger.error(f"An error occurred: {e}")
         return val
 

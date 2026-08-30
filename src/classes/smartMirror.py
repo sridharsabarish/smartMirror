@@ -5,7 +5,7 @@ from flask import Flask, render_template_string
 import os
 from dotenv import load_dotenv, find_dotenv
 from classes.buildHtml import buildHtml
-from classes.APIRequest import APIRequest
+from new_version.APIRequest import APIRequest
 from loguru import logger
 import sys
 import time
