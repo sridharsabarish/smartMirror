@@ -27,7 +27,7 @@ class TestWeather:
         out = weatherObj.load_weather(city=t)
         print(out)
         print_sunset(out)
-        assert len(out)==0
+        assert len(out) > 0
 
     @pytest.mark.parametrize("t",INCORRECT_TEST)
     def test_fail_incorrect_cities(self,t):

@@ -6,9 +6,6 @@ import os
 
 class WeatherAPI:
 
-
-
-
     def __init__(self):
         self.read_api_key_from_env()
         self.json = {}
