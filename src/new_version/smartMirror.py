@@ -14,6 +14,10 @@ class LIGHT:
 
     
 class smartMirror:
+
+    BUSES_URL="https://transport.integration.sl.se/v1/sites/2232/departures?forecast=100"
+    TRAINS_URL="https://transport.integration.sl.se/v1/sites/9668/departures?forecast=100" 
+
     buses = {}
     trains = {}
     poem  = {}
@@ -51,12 +55,11 @@ class smartMirror:
     def call_sl_api(self,mode):
         # TODO: Implement more
         out = {}
-        BUSES_URL="https://transport.integration.sl.se/v1/sites/2232/departures?forecast=100"
-        TRAINS_URL="https://transport.integration.sl.se/v1/sites/9668/departures?forecast=100"        
+       
         if mode =="buses":
             
             try:
-                out = self.APIRequestObj.get_json(BUSES_URL)
+                out = self.APIRequestObj.get_json(self.BUSES_URL)
                 AllDepartures = out['departures']
                 #pprint.pp(AllDepartures)
             except:
@@ -72,7 +75,7 @@ class smartMirror:
         if mode == "trains":
    
             try:
-                out = self.APIRequestObj.get_json(TRAINS_URL)
+                out = self.APIRequestObj.get_json(self.TRAINS_URL)
                 AllDepartures = out['departures']
                 #pprint.pp(AllDepartures)
             except:
